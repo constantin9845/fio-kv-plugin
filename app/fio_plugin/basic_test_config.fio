@@ -1,0 +1,16 @@
+[global]
+ioengine=./unvme2_fio_plugin
+json_path=./basic_test_config.json
+size=10G
+time_based=0
+ramp_time=0
+runtime=0
+blocksize=4k
+thread=1
+direct=1
+group_reporting=1
+verify=0
+norandommap=1
+[test0]
+filename=0000.00.05.0
+numjobs=4

@@ -1,0 +1,9 @@
+{
+"ssd_type":"lba",
+"device_description":[
+{
+"dev_id":"0000.00.05.0",
+"core_mask":"0xF"
+}
+]
+}

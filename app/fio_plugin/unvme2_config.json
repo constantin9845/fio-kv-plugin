@@ -1,0 +1,10 @@
+{
+  "ssd_type" : "kv",
+  "device_description" : [
+    {
+      "dev_id" : "0000:00:05.0",
+      "core_mask" : 3,
+      "cq_thread_mask" : "c"
+    }
+  ]
+}

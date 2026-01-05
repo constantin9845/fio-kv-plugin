@@ -1,0 +1,3 @@
+/home/liu/uNVMe/driver/external/dpdk-18.05/x86_64-native-linuxapp-gcc/build/kernel/linux/kni/rte_kni.ko
+/home/liu/uNVMe/driver/external/dpdk-18.05/x86_64-native-linuxapp-gcc/build/kernel/linux/kni/kni_misc.o /home/liu/uNVMe/driver/external/dpdk-18.05/x86_64-native-linuxapp-gcc/build/kernel/linux/kni/kni_net.o
+
