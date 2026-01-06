@@ -293,7 +293,7 @@ static int kv_fio_setup(struct thread_data *td)
 	struct kv_fio_engine_options *engine_option = td->eo;
 
 	if(engine_option->kd){
-		engine_option->kd_val = atof(engine->kd);
+		engine_option->kd_value = atof(engine->kd);
 	}
 	else{
 		engine_option->kd_value = 0.1; 
@@ -617,7 +617,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		}
 
 		printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
-		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->kd);
+		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->kd_value);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
