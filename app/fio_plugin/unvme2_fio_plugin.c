@@ -569,7 +569,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 
 	kv_pair* kv = &fio_req->kv;
-	kv->key.length = fio_req->key_size;
+	//kv->key.length = fio_req->key_size;
+	kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
 	kv->value.value = io_u->buf;
@@ -582,7 +583,10 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		memcpy(fio_req->key, &lba, sizeof(uint64_t));
 	} else { // KV_TYPE_SSD
 		uint64_t _key = io_u->offset / io_u->xfer_buflen;
-		memcpy(fio_req->key, &_key, MIN(kv->key.length, sizeof(uint64_t)));
+
+		//memcpy(fio_req->key, &_key, MIN(kv->key.length, sizeof(uint64_t)));
+		memcpy(fio_req->key, &_key, kv->key.length);
+
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
 		}
@@ -595,13 +599,18 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 
 	switch (io_u->ddir) {
+
+	// Retrieve
 	case DDIR_READ:
+
 		kv->param.io_option.retrieve_option = KV_RETRIEVE_DEFAULT;
 		if (kv->value.length & (KV_VALUE_LENGTH_ALIGNMENT_UNIT - 1)) {
 			kv->value.length &= ~(KV_VALUE_LENGTH_ALIGNMENT_UNIT - 1);
 			//kv->value.length += KV_VALUE_LENGTH_ALIGNMENT_UNIT;
 			//fprintf(stderr, "kv->value.length: %d, io_u->buflen: %ld\n", kv->value.length, io_u->buflen);
 		}
+
+		
 
 		if(g_sdk_opt.use_cache){
 			ret = fio_kv_cache_read(kv);
