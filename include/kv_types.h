@@ -368,12 +368,12 @@ typedef struct {
 
 /* VARIABLE KEY SIZE FUNCTIONS AND VARIABLES */
 
-extern double KEY_DISTRIBUTION_STATUS = 0;
-extern double SMALL_KEY_COUNTER = 0;
-extern double LARGE_KEY_COUNTER = 0;
+extern double KEY_DISTRIBUTION_STATUS;
+extern double SMALL_KEY_COUNTER;
+extern double LARGE_KEY_COUNTER;
 
 // 4 to 255 bytes
-int get_kv_key_size(double kd){
+static inline int get_kv_key_size(double kd){
 
 	// small keys = 4 ~ 32 bytes
 	// large keys = 33 ~ 255 bytes
