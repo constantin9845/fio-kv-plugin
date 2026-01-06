@@ -32,6 +32,8 @@ static inline int get_kv_key_size(double kd){
 	else
 		KEY_DISTRIBUTION_STATUS = LARGE_KEY_COUNTER / SMALL_KEY_COUNTER;
 
+	printf("DIST = %.2f\n", KEY_DISTRIBUTION_STATUS);
+
 	return k;
 }
 
