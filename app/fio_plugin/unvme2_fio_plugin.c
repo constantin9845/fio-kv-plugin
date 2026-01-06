@@ -31,7 +31,7 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "var_key.h"
+#include "include/var_key.h"
 #include <ctype.h>
 #include <regex.h>
 #include "kvnvme.h"
