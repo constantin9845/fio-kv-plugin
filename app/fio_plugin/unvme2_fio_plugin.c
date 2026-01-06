@@ -37,7 +37,7 @@
 #include "kv_apis.h"
 #include "kv_types.h"
 
-#inlude "var_key.h"
+#include "var_key.h"
 
 #include "config-host.h"
 #include "fio.h"
