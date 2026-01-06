@@ -606,7 +606,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		}
 
 		printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
-		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->key_dist);
+		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->kd);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
