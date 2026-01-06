@@ -41,7 +41,7 @@ CFLAGS += -O2 -march=native -m64 -D_GNU_SOURCE -I../fio_plugin/inlude var_key.c 
 override LDFLAGS += -shared -rdynamic
 
 APP = unvme2_fio_plugin
-C_SRCS = $(APP:%=%.c)
+C_SRCS = $(APP:%=%.c) var_key.c
 OBJS = $(C_SRCS:.c=.o)
 LINK_C = $(CC) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
 
