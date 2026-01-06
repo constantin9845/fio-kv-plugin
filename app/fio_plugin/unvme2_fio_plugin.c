@@ -31,13 +31,12 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "var_key.h"
 #include <ctype.h>
 #include <regex.h>
 #include "kvnvme.h"
 #include "kv_apis.h"
 #include "kv_types.h"
-
-#include "var_key.h"
 
 #include "config-host.h"
 #include "fio.h"
