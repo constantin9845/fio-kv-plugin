@@ -111,9 +111,6 @@ static struct fio_option options[] = {
                 .help   = "Key size of KV pairs (valid only for KV SSD)",
                 .category = FIO_OPT_C_ENGINE,
         },
-        {
-                .name   = NULL,
-        },
 		{
 				.name   = "kd",
 				.lname	= "KD factor",
@@ -123,6 +120,9 @@ static struct fio_option options[] = {
 				.help   = "KD parameter (float)",
 				.category = FIO_OPT_C_ENGINE,
 		},
+		{
+                .name   = NULL,
+        },
 		
 };
 
