@@ -301,10 +301,6 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->kd_value = 0.1; 
 	}
 
-	double KEY_DISTRIBUTION_STATUS = 0;
-	double SMALL_KEY_COUNTER = 0;
-	double LARGE_KEY_COUNTER = 0;
-
 	unsigned int i;
 
 	pthread_mutex_lock(&mutex);
