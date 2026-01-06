@@ -293,7 +293,7 @@ static int kv_fio_setup(struct thread_data *td)
 	struct kv_fio_engine_options *engine_option = td->eo;
 
 	if(engine_option->kd){
-		engine_option->kd_value = atof(engine->kd);
+		engine_option->kd_value = atof(engine_option->kd);
 	}
 	else{
 		engine_option->kd_value = 0.1; 
