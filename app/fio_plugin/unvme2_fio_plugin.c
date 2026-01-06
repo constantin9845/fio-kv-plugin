@@ -569,12 +569,9 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
-	double temp = get_kv_key_size(0.3);
-	printf("** %f ** \n", temp);
-
 	kv_pair* kv = &fio_req->kv;
-	kv->key.length = fio_req->key_size;
-	//kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
+	//kv->key.length = fio_req->key_size;
+	kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
 	kv->value.value = io_u->buf;
@@ -628,7 +625,6 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		}
 
 		printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
-		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->kd_value);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
