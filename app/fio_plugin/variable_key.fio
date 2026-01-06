@@ -23,6 +23,7 @@ iodepth=128
 bs=4k
 ks=16
 size=4k
+kd=0.1
 
 [test]
 filename=0000.00.05.0

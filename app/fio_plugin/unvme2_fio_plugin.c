@@ -61,8 +61,8 @@ struct kv_fio_request {
 };
 
 struct kv_dev_info {
-	struct fio_file		*f;
-	uint64_t		dev_handle;
+	struct fio_file		*f; // 
+	uint64_t		dev_handle; 
 	uint64_t		core_mask;
 	uint64_t		cq_thread_mask;
 	uint32_t		sector_size;
@@ -87,7 +87,8 @@ struct kv_fio_thread {
 struct kv_fio_engine_options { //fio options
         void    	*pad;
         char    	*json_path;
-        uint16_t    	key_size;
+        uint16_t    key_size;
+        float       key_dist;
 };
 
 static struct fio_option options[] = {
@@ -112,6 +113,15 @@ static struct fio_option options[] = {
         {
                 .name   = NULL,
         },
+		{
+				.name   = "kd",
+				.alias	= "keydist",
+				.lname  = "Percentage of key distribution being small key",
+				.type   = FIO_OPT_FLOAT,
+				.off1   = offsetof(struct kv_fio_engine_options, kd),
+				.category = FIO_OPT_C_ENGINE,
+		},
+		
 };
 
 static int td_count;
@@ -271,6 +281,7 @@ static uint64_t kv_fio_calc_hugemem_size(struct thread_data *td)
 	return total_io_block_size + REDUNDANT_MEM_SIZE; //redundant hugemem for key alloc, etc.
 }
 
+
 static int kv_fio_setup(struct thread_data *td)
 {
 	int ret;
@@ -418,6 +429,7 @@ err:
 	return 1;
 }
 
+
 static int kv_fio_open(struct thread_data *td, struct fio_file *f)
 {
 #if (CHECK_FIO_VERSION(FIO_MAJOR_VERSION, FIO_MINOR_VERSION) >= CHECK_FIO_VERSION(2,14))
@@ -467,6 +479,7 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 		return 1;
 	}
 
+	// if direct IO or mem_align or oatomic is set, align the buffer
 	if (td->o.odirect || td->o.mem_align || td->o.oatomic ||
 #if (CHECK_FIO_VERSION(FIO_MAJOR_VERSION, FIO_MINOR_VERSION) >= CHECK_FIO_VERSION(2,14))
 	  td_ioengine_flagged(td, FIO_RAWIO)) {
@@ -477,12 +490,15 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	} else {
 		orig_buffer = td->orig_buffer;
 	}
+
+	// buffer pointer
 	io_u->buf = orig_buffer + (io_u->index * aligned_max_bs);
+
 	io_u->engine_data = fio_req;
 
-	fio_req->io = io_u;
+	fio_req->io = io_u; 
 	fio_req->fio_thread = fio_thread;
-	fio_req->key_size = fio_thread->key_size;
+	fio_req->key_size = fio_thread->key_size; // key size to be used for 
 	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
 
 	printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
@@ -589,6 +605,9 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 			if (fio_kv_cache_write(kv))
 				printf("failed to caching\n");
 		}
+
+		printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
+		printf("FIO key distribution: %.2f\n", ((struct kv_fio_engine_options *)td->eo)->key_dist);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;

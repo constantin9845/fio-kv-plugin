@@ -273,11 +273,12 @@ int kv_nvme_write(uint64_t handle, int qid, kv_pair *kv) {
 			qid = 0;
 		}
 	}
-  if(qid >= MAX_CPU_CORES || !nvme->io_queue_type[qid]) {
-    KVNVME_ERR("Invalid qid: %d passed", qid);
-    LEAVE();
-    return ret;
-  }
+	
+	if(qid >= MAX_CPU_CORES || !nvme->io_queue_type[qid]) {
+		KVNVME_ERR("Invalid qid: %d passed", qid);
+		LEAVE();
+		return ret;
+	}
 
 	queue_is_async = ((nvme->io_queue_type[qid] == ASYNC_IO_QUEUE) ? 1 : 0);
 	if(queue_is_async) {
