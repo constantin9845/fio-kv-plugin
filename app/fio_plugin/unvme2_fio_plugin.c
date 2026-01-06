@@ -88,7 +88,8 @@ struct kv_fio_engine_options { //fio options
         void    	*pad;
         char    	*json_path;
         uint16_t    key_size;
-        float       kd;
+        char 		*kd;
+		double 	    kd_value;
 };
 
 static struct fio_option options[] = {
@@ -115,9 +116,11 @@ static struct fio_option options[] = {
         },
 		{
 				.name   = "kd",
-				.alias	= "keydist",
-				.lname  = "Percentage of key distribution being small key",
+				.lname	= "KD factor",
+				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, kd),
+				.def	= "0.1",
+				.help   = "KD parameter (float)",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		
@@ -288,6 +291,14 @@ static int kv_fio_setup(struct thread_data *td)
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
+
+	if(engine_option->kd){
+		engine_option->kd_val = atof(engine->kd);
+	}
+	else{
+		engine_option->kd_value = 0.1; 
+	}
+
 	unsigned int i;
 
 	pthread_mutex_lock(&mutex);
