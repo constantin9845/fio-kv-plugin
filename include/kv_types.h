@@ -381,7 +381,7 @@ static inline int get_kv_key_size(double kd){
 	int k;
 
 	if(KEY_DISTRIBUTION_STATUS < kd){
-		LARGE_KEY_COUNTER++
+		LARGE_KEY_COUNTER++;
 		k = (4 + rand() % (254 - 33 + 1));
 	}
 	else{
