@@ -512,7 +512,7 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->key_size = fio_thread->key_size; // key size to be used for 
 	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
 
-	printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
+	//printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
 
 	return fio_req->key == NULL;
 }
@@ -569,6 +569,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
+	printf("CURRENT KEY DISTRIBUTION STATUS: %.2f large keys\n", KEY_DISTRIBUTION_STATUS);
+
 	kv_pair* kv = &fio_req->kv;
 	//kv->key.length = fio_req->key_size;
 	kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
@@ -624,7 +626,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				printf("failed to caching\n");
 		}
 
-		printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
+		//printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;

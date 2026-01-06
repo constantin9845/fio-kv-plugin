@@ -15,7 +15,7 @@ verify=0
 time_based=1
 ramp_time=0
 runtime=1
-rw=read
+rw=rw
 
 iodepth=128
 
