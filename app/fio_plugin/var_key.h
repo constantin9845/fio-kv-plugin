@@ -8,7 +8,7 @@ extern double SMALL_KEY_COUNTER;
 extern double LARGE_KEY_COUNTER;
 
 // 4 to 255 bytes
-static inline int get_kv_key_size(double kd){
+static int get_kv_key_size(double kd){
 
 	// small keys = 4 ~ 32 bytes
 	// large keys = 33 ~ 255 bytes
