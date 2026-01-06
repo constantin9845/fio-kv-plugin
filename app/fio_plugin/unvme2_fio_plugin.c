@@ -650,6 +650,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
+	printf("Command completion code = d\n%", ret);
+	
 	return (ret) ? FIO_Q_BUSY : fio_thread->fio_q_finished;
         // FIO_Q_COMPLETED = 0, /* completed sync */
         // FIO_Q_QUEUED    = 1, /* queued, will complete async */
