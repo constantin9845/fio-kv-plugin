@@ -570,8 +570,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 
 	kv_pair* kv = &fio_req->kv;
-	//kv->key.length = fio_req->key_size;
-	kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
+	kv->key.length = fio_req->key_size;
+	//kv->key.length = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
 	kv->value.value = io_u->buf;
@@ -585,8 +585,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	} else { // KV_TYPE_SSD
 		uint64_t _key = io_u->offset / io_u->xfer_buflen;
 
-		//memcpy(fio_req->key, &_key, MIN(kv->key.length, sizeof(uint64_t)));
-		memcpy(fio_req->key, &_key, kv->key.length);
+		memcpy(fio_req->key, &_key, MIN(kv->key.length, sizeof(uint64_t)));
+		//memcpy(fio_req->key, &_key, kv->key.length);
 
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
