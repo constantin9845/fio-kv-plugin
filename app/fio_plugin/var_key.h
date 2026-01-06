@@ -2,6 +2,7 @@
 #define VAR_KEY_H
 
 #include <stdlib.h>
+#include <stdio.h>
 
 /* VARIABLE KEY SIZE FUNCTIONS AND VARIABLES */
 
