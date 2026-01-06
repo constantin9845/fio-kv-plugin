@@ -17,20 +17,26 @@ static inline int get_kv_key_size(double kd){
 
 	int k;
 
+    printf("Starting...\n");
+
 	if(KEY_DISTRIBUTION_STATUS < kd){
+        printf("pre calc...\n");
 		LARGE_KEY_COUNTER++;
 		k = (4 + rand() % (254 - 33 + 1));
+        printf("after calc...\n");
 	}
 	else{
 		SMALL_KEY_COUNTER++;
 		k = (4 + rand() % (32 - 4 + 1));
 	}
 
+    printf("check dist...\n");
 	if(SMALL_KEY_COUNTER == 0)
 		KEY_DISTRIBUTION_STATUS = 1;
 	else
 		KEY_DISTRIBUTION_STATUS = LARGE_KEY_COUNTER / SMALL_KEY_COUNTER;
 
+    printf("done...\n");
 	return k;
 }
 
