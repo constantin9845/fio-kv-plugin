@@ -88,7 +88,7 @@ struct kv_fio_engine_options { //fio options
         void    	*pad;
         char    	*json_path;
         uint16_t    key_size;
-        float       key_dist;
+        float       kd;
 };
 
 static struct fio_option options[] = {
@@ -117,7 +117,6 @@ static struct fio_option options[] = {
 				.name   = "kd",
 				.alias	= "keydist",
 				.lname  = "Percentage of key distribution being small key",
-				.type   = FIO_OPT_FLOAT,
 				.off1   = offsetof(struct kv_fio_engine_options, kd),
 				.category = FIO_OPT_C_ENGINE,
 		},
