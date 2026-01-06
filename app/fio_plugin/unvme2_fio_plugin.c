@@ -37,6 +37,8 @@
 #include "kv_apis.h"
 #include "kv_types.h"
 
+#inlude "var_key.h"
+
 #include "config-host.h"
 #include "fio.h"
 #include "optgroup.h"
@@ -613,8 +615,6 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 			//kv->value.length += KV_VALUE_LENGTH_ALIGNMENT_UNIT;
 			//fprintf(stderr, "kv->value.length: %d, io_u->buflen: %ld\n", kv->value.length, io_u->buflen);
 		}
-
-		
 
 		if(g_sdk_opt.use_cache){
 			ret = fio_kv_cache_read(kv);
