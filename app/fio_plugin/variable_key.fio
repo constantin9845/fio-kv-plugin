@@ -17,13 +17,15 @@ ramp_time=0
 runtime=1
 rw=rw
 
-iodepth=128
+iodepth=1
 
 
 bs=4k
 ks=16
 size=4k
 kd=0.1
+
+variable_value_size=1
 
 [test]
 filename=0000.00.05.0
