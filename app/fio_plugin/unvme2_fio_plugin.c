@@ -607,7 +607,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	//int key_len = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
 	//kv->key.length = key_len;
 
-	kv->key.length = fio_req->key_size;
+	kv->key.length = 128;
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
 	kv_free(fio_req->key);
