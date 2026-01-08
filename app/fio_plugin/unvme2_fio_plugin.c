@@ -99,16 +99,20 @@ struct kv_fio_engine_options { //fio options
 		bool 		variable_value_size_status;
 
 		char	    *ratio_512;
-		char		*ratio_1kb;
-		char		*ratio_2kb;
-		char		*ratio_3kb;
-		char		*ratio_4kb;
-
 		int			ratio_512_value;
+
+		char		*ratio_1kb;
 		int			ratio_1kb_value;
+
+		char		*ratio_2kb;
 		int			ratio_2kb_value;
+
+		char		*ratio_3kb;
 		int			ratio_3kb_value;
+
+		char		*ratio_4kb;
 		int			ratio_4kb_value;
+
 };
 
 static struct fio_option options[] = {
