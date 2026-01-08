@@ -81,6 +81,17 @@ extern double IO_COUNTER;
 // 1 512 | 2 1kb | 3 2kb | 4 3kb | 5 4kb
 extern int LAST_IO_TYPE;
 
+static inline bool ratio_satisfied(double counter, int target){
+
+	if(IO_COUNTER == 0){
+		return false;
+	}
+
+	double status = counter/IO_COUNTER;
+
+	return status >= target;
+}
+
 // start with largest values first and move smaller as ration satisfied
 static inline u_int32_t get_kv_value_size(){
 	// Type 1 : 512 bytes
@@ -113,17 +124,6 @@ static inline u_int32_t get_kv_value_size(){
 		LAST_IO_TYPE = 1;
 		return (u_int32_t)512;
 	}
-}
-
-static inline bool ratio_satisfied(double counter, int target){
-
-	if(IO_COUNTER == 0){
-		return false;
-	}
-
-	double status = counter/IO_COUNTER;
-
-	return status >= target;
 }
 
 static inline u_int64_t splitmix64(u_int64_t *x){
