@@ -58,7 +58,7 @@ struct kv_fio_request {
 	struct kv_fio_thread    *fio_thread;
 	kv_pair                 kv;
 	uint8_t                 *key;
-	uint16_t		key_size;
+	uint16_t				key_size;
 };
 
 struct kv_dev_info {
@@ -93,8 +93,8 @@ struct kv_fio_engine_options { //fio options
         char 		*kd;
 		double 	    kd_value;
 
-		//char 		*random_value_size;
-		//bool 		random_value_size_status;
+		char 		*random_value_size;
+		bool 		random_value_size_status;
 };
 
 static struct fio_option options[] = {
@@ -125,7 +125,7 @@ static struct fio_option options[] = {
 				.help   = "KD parameter (float)",
 				.category = FIO_OPT_C_ENGINE,
 		},
-		/*
+		
 		{
 				.name   = "random_value_size",
 				.lname	= "Random value size switch",
@@ -135,7 +135,7 @@ static struct fio_option options[] = {
 				.help   = "Random value size (bool)",
 				.category = FIO_OPT_C_ENGINE,
 		},
-		*/
+		
 		{
                 .name   = NULL,
         },
@@ -316,7 +316,7 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->kd_value = 0.1; 
 	}
 
-	/*
+	
 	// set random value size bit
 	if(engine_option->random_value_size){
 		engine_option->random_value_size_status = atoi(engine_option->random_value_size) != 0;
@@ -324,7 +324,9 @@ static int kv_fio_setup(struct thread_data *td)
 	else{
 		engine_option->random_value_size_status = false;
 	}
-	*/
+
+	printf("Random value size --> %d\n", engine_option->random_value_size_status);
+	
 
 	unsigned int i;
 
@@ -595,7 +597,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
-	printf("CURRENT KEY DISTRIBUTION STATUS: %.2f are large keys\n", KEY_DISTRIBUTION_STATUS);
+	//printf("CURRENT KEY DISTRIBUTION STATUS: %.2f are large keys\n", KEY_DISTRIBUTION_STATUS);
 
 	kv_pair* kv = &fio_req->kv;
 	int key_len = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
