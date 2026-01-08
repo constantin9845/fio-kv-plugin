@@ -620,16 +620,17 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		// generate 128-byte deterministic key from 64-bit seed that comes from io_u
 		uint64_t _key = io_u->offset / io_u->xfer_buflen;
-		uint8_t gen[128];
+		const size_t LEN = 128;
+		uint8_t gen[LEN];
 		uint64_t seed = _key;
 
 		uint64_t rnd = seed ^ ((uint64_t)fio_thread->qid << 32) ^ (uint64_t)td->thread_number;
 		
 		// fill key
-		int filled = 0;
-		while(filled < 128){
+		size_t filled = 0;
+		while(filled < LEN){
 			uint64_t v = splitmix64(&rnd);
-			int take = MIN(sizeof(v), 128 - filled);
+			int take = MIN(sizeof(v), LEN - filled);
 			memcpy(gen + filled, &v, take);
 			filled += take;
 		}
