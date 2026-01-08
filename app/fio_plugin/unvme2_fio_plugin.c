@@ -816,6 +816,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		//printf("[KV STORE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length/1024);
 
 		// increment value size counters
+		IO_COUNTER++;
 		switch(LAST_IO_TYPE){
 			case 1:
 				R512B_COUNTER++;
