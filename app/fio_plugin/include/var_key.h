@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdatomic.h>
 
 /* VARIABLE KEY SIZE FUNCTIONS AND VARIABLES */
 
@@ -69,13 +70,13 @@ extern int target_r2KB;
 extern int target_r3KB;
 extern int target_r4KB;
 
-extern double R512B_COUNTER;
-extern double R1KB_COUNTER;
-extern double R2KB_COUNTER;
-extern double R3KB_COUNTER;
-extern double R4KB_COUNTER;
+extern _Atomic double R512B_COUNTER;
+extern _Atomic double R1KB_COUNTER;
+extern _Atomic double R2KB_COUNTER;
+extern _Atomic double R3KB_COUNTER;
+extern _Atomic double R4KB_COUNTER;
 
-extern double IO_COUNTER;
+extern _Atomic double IO_COUNTER;
 
 // 0 none
 // 1 512 | 2 1kb | 3 2kb | 4 3kb | 5 4kb
