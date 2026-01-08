@@ -677,7 +677,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				printf("failed to caching\n");
 		}
 
-		//printf("Performing KV RETRIEVE | key size: %u\n", kv->key.length);
+		printf("KV RETRIEVE | key size: %u\n", kv->key.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -693,6 +693,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				//break;
 			}
 		}
+
+		printf("KV STORE | key size: %u\n", kv->key.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
