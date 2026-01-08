@@ -705,7 +705,6 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	fio_req->key = kv_zalloc(MEM_ALIGN(128, 4));
 	fio_req->key_size = 128;
 
-	printf("test\n");
 
 	// get value size
 	uint32_t valueKB = get_kv_value_size();
