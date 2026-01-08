@@ -109,12 +109,16 @@ static inline u_int32_t get_kv_value_size(){
 		LAST_IO_TYPE = 5;
 		return (u_int32_t)4096;
 	}
+	else{
+		LAST_IO_TYPE = 1;
+		return (u_int32_t)512;
+	}
 }
 
 static inline bool ratio_satisfied(double counter, int target){
 
 	if(IO_COUNTER == 0){
-		return 0;
+		return false;
 	}
 
 	double status = counter/IO_COUNTER;
