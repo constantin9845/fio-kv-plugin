@@ -327,7 +327,7 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->variable_value_size_status = false;
 	}
 
-	printf("variable value size --> %d\n", engine_option->variable_value_size_status);
+	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 	
 
 	unsigned int i;
@@ -692,7 +692,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				}
 				break;
 			}
-			//NOTE: the same key in cache enteies will be overrided
+			//NOTE: the same key in cache entries will be overrided
 			if (fio_kv_cache_write(kv))
 				printf("failed to caching\n");
 		}
