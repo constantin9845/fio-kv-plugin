@@ -59,6 +59,8 @@ struct kv_fio_request {
 	kv_pair                 kv;
 	uint8_t                 *key;
 	uint16_t				key_size;
+	uint8_t					*value_buf;
+	uint16_t				value_buff_size;
 };
 
 struct kv_dev_info {
@@ -93,8 +95,8 @@ struct kv_fio_engine_options { //fio options
         char 		*kd;
 		double 	    kd_value;
 
-		char 		*random_value_size;
-		bool 		random_value_size_status;
+		char 		*variable_value_size;
+		bool 		variable_value_size_status;
 };
 
 static struct fio_option options[] = {
@@ -127,12 +129,12 @@ static struct fio_option options[] = {
 		},
 		
 		{
-				.name   = "random_value_size",
-				.lname	= "Random value size switch",
+				.name   = "variable_value_size",
+				.lname	= "variable value size switch",
 				.type   = FIO_OPT_STR_STORE,
-				.off1   = offsetof(struct kv_fio_engine_options, random_value_size),
+				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
-				.help   = "Random value size (bool)",
+				.help   = "variable value size (bool)",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		
@@ -317,15 +319,15 @@ static int kv_fio_setup(struct thread_data *td)
 	}
 
 	
-	// set random value size bit
-	if(engine_option->random_value_size){
-		engine_option->random_value_size_status = atoi(engine_option->random_value_size) != 0;
+	// set variable value size bit
+	if(engine_option->variable_value_size){
+		engine_option->variable_value_size_status = atoi(engine_option->variable_value_size) != 0;
 	}
 	else{
-		engine_option->random_value_size_status = false;
+		engine_option->variable_value_size_status = false;
 	}
 
-	printf("Random value size --> %d\n", engine_option->random_value_size_status);
+	printf("variable value size --> %d\n", engine_option->variable_value_size_status);
 	
 
 	unsigned int i;
@@ -552,6 +554,7 @@ static void kv_fio_io_u_free(struct thread_data *td, struct io_u *io_u)
 	if (fio_req) {
 		assert(fio_req->io == io_u);
 		kv_free(fio_req->key);
+		kv_free(fio_req->value_buf);
 		free(fio_req);
 		io_u->engine_data = NULL;
 	}
@@ -609,8 +612,19 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	fio_req->key = kv_zalloc(MEM_ALIGN(key_len, 4));
 	fio_req->key_size = key_len;
 
-	kv->value.value = io_u->buf;
-	kv->value.length = io_u->xfer_buflen;
+	// get value size
+	int valueKB = get_kv_value_size();
+
+	// override value buffer
+	kv_free(fio_req->value_buf);
+	fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB*1024, 4));
+	fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
+
+	// filll value buffer
+	memset(fio_req->value_buf, 0xA5, valueKB);
+
+	kv->value.value = fio_req->value_buf;
++	kv->value.length = valueKB;
 	kv->value.actual_value_size = 0;
 	kv->value.offset = 0;
 
@@ -682,7 +696,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				printf("failed to caching\n");
 		}
 
-		//printf("KV RETRIEVE | key size: %u\n", kv->key.length);
+		printf("[KV RETRIEVE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -701,7 +715,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 			}
 		}
 
-		//printf("KV STORE | key size: %u\n", kv->key.length);
+		printf("[KV STORE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
