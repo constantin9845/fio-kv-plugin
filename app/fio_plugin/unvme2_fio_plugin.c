@@ -610,9 +610,9 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	kv->key.length = fio_req->key_size;
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
-	//kv_free(fio_req->key);
-	//fio_req->key = kv_zalloc(MEM_ALIGN(key_len, 4));
-	//fio_req->key_size = key_len;
+	kv_free(fio_req->key);
+	fio_req->key = kv_zalloc(MEM_ALIGN(128, 4));
+	fio_req->key_size = 128;
 
 	// get value size
 	uint32_t valueKB = get_kv_value_size();
