@@ -624,7 +624,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	memset(fio_req->value_buf, 0xA5, valueKB);
 
 	kv->value.value = fio_req->value_buf;
-+	kv->value.length = valueKB*1024;
++	kv->value.length = (uint32_t)(valueKB*1024);
 	kv->value.actual_value_size = 0;
 	kv->value.offset = 0;
 
