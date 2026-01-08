@@ -60,7 +60,7 @@ struct kv_fio_request {
 	uint8_t                 *key;
 	uint16_t				key_size;
 	uint8_t					*value_buf;
-	uint16_t				value_buff_size;
+	uint16_t				value_buf_size;
 };
 
 struct kv_dev_info {
