@@ -61,20 +61,64 @@ static inline int get_kv_key_size(double kd){
 	return k;
 }
 
+// must sum to 100
+extern int target_r512B;
+extern int target_r1KB;
+extern int target_r2KB;
+extern int target_r3KB;
+extern int target_r4KB;
+
+extern double R512B_COUNTER;
+extern double R1KB_COUNTER;
+extern double R2KB_COUNTER;
+extern double R3KB_COUNTER;
+extern double R4KB_COUNTER;
+
+extern double IO_COUNTER;
+
+// 0 none
+// 1 512 | 2 1kb | 3 2kb | 4 3kb | 5 4kb
+extern int LAST_IO_TYPE;
+
+// start with largest values first and move smaller as ration satisfied
 static inline u_int32_t get_kv_value_size(){
-	// 28KB to 2048KB
-	// unit : 1 = 1KB
+	// Type 1 : 512 bytes
+	// Type 2 : 1KB
+	// Type 3 : 2KB
+	// Type 4 : 3KB
+	// Type 5 : 4KB
 
-	// 512 bytes
-	// 1KB
-	// 2KB
-	// 3KB
-	// 4KB
+	if(!ratio_satisfied(R512B_COUNTER, target_r512B)){
+		LAST_IO_TYPE = 1;
+		return (u_int32_t)512;
+	}
+	else if(!ratio_satisfied(R1KB_COUNTER, target_r1KB)){
+		LAST_IO_TYPE = 2;
+		return (u_int32_t)1024;
+	}
+	else if(!ratio_satisfied(R2KB_COUNTER, target_r2KB)){
+		LAST_IO_TYPE = 3;
+		return (u_int32_t)2048;
+	}
+	else if(!ratio_satisfied(R3KB_COUNTER, target_r3KB)){
+		LAST_IO_TYPE = 4;
+		return (u_int32_t)3072;
+	}
+	else if(!ratio_satisfied(R4KB_COUNTER, target_r4KB)){
+		LAST_IO_TYPE = 5;
+		return (u_int32_t)4096;
+	}
+}
 
-	int min = 28;
-	int max = 2048;
+static inline bool ratio_satisfied(double counter, int target){
 
-	return (u_int32_t)((rand() % (max - min + 1)) + min);
+	if(IO_COUNTER == 0){
+		return false;
+	}
+
+	double status = counter/IO_COUNTER;
+
+	return status >= target;
 }
 
 static inline u_int64_t splitmix64(u_int64_t *x){

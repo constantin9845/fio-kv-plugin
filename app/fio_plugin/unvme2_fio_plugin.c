@@ -97,6 +97,18 @@ struct kv_fio_engine_options { //fio options
 
 		char 		*variable_value_size;
 		bool 		variable_value_size_status;
+
+		char	    *ratio_512;
+		char		*ratio_1kb;
+		char		*ratio_2kb;
+		char		*ratio_3kb;
+		char		*ratio_4kb;
+
+		int			ratio_512_value;
+		int			ratio_1kb_value;
+		int			ratio_2kb_value;
+		int			ratio_3kb_value;
+		int			ratio_4kb_value;
 };
 
 static struct fio_option options[] = {
@@ -137,7 +149,51 @@ static struct fio_option options[] = {
 				.help   = "variable value size (bool)",
 				.category = FIO_OPT_C_ENGINE,
 		},
-		
+		{
+				.name   = "ratio_512",
+				.lname	= "ratio of 512 byte values",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, ratio_512_value),
+				.def	= "100",
+				.help   = "Ratio (/100) of values with size 512 bytes (int) [all 5 rations must sum to exactly 100!]",
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "ratio_1kb",
+				.lname	= "ratio of 1KB values",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, ratio_1kb_value),
+				.def	= "0",
+				.help   = "Ratio (/100) of values with size 1KB (int) [all 5 rations must sum to exactly 100!]",
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "ratio_2kb",
+				.lname	= "ratio of 2KB values",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, ratio_2kb_value),
+				.def	= "0",
+				.help   = "Ratio (/100) of values with size 2KB (int) [all 5 rations must sum to exactly 100!]",
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "ratio_3kb",
+				.lname	= "ratio of 3KB values",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, ratio_3kb_value),
+				.def	= "0",
+				.help   = "Ratio (/100) of values with size 3KB (int) [all 5 rations must sum to exactly 100!]",
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "ratio_4kb",
+				.lname	= "ratio of 4KB values",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, ratio_4kb_value),
+				.def	= "0",
+				.help   = "Ratio (/100) of values with size 4KB (int) [all 5 rations must sum to exactly 100!]",
+				.category = FIO_OPT_C_ENGINE,
+		},
 		{
                 .name   = NULL,
         },
@@ -328,6 +384,41 @@ static int kv_fio_setup(struct thread_data *td)
 	}
 
 	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
+
+	// set value size ratios
+	if(
+		engine_option->ratio_512 &&
+		engine_option->ratio_1kb &&
+		engine_option->ratio_2kb &&
+		engine_option->ratio_3kb &&
+		engine_option->ratio_4kb 
+	){
+		engine_option->ratio_512_value = atof(engine_option->ratio_512);
+		engine_option->ratio_1kb_value = atof(engine_option->ratio_1kb);
+		engine_option->ratio_2kb_value = atof(engine_option->ratio_2kb);
+		engine_option->ratio_3kb_value = atof(engine_option->ratio_3kb);
+		engine_option->ratio_4kb_value = atof(engine_option->ratio_4kb);
+
+		// ratios dont sum to 100
+		if(
+			(engine_option->ratio_512_value + engine_option->ratio_1kb_value + engine_option->ratio_2kb_value + engine_option->ratio_3kb_value + engine_option->ratio_4kb_value) > 101 ||
+			(engine_option->ratio_512_value + engine_option->ratio_1kb_value + engine_option->ratio_2kb_value + engine_option->ratio_3kb_value + engine_option->ratio_4kb_value) < 99
+		){
+			printf("Invalid value size ratios!\n");
+			goto err;
+		}else{
+			target_r512B = engine_option->ratio_512_value;
+			target_r1KB = engine_option->ratio_1kb_value;
+			target_r2KB = engine_option->ratio_2kb_value;
+			target_r3KB = engine_option->ratio_3kb_value;
+			target_r4KB = engine_option->ratio_4kb_value;
+		}
+	}
+	// ratios undefined
+	else{
+		printf("Invalid value size ratios!\n");
+		goto err;
+	}
 	
 
 	unsigned int i;
@@ -619,14 +710,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	// override value buffer
 	kv_free(fio_req->value_buf);
-	fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB*1024, 4));
+	fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB, 4));
 	fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
 
 	// fill value buffer
-	memset(fio_req->value_buf, 0xA5, valueKB*1024);
+	memset(fio_req->value_buf, 0xA5, valueKB);
 
 	kv->value.value = fio_req->value_buf;
-	kv->value.length = (uint32_t)(valueKB*1024);
+	kv->value.length = valueKB;
 	kv->value.actual_value_size = 0;
 	kv->value.offset = 0;
 
@@ -721,6 +812,25 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		}
 
 		//printf("[KV STORE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length/1024);
+
+		// increment value size counters
+		swith(LAST_IO_TYPE){
+			case 1:
+				R512B_COUNTER++;
+				break;
+			case 2:
+				R1KB_COUNTER++;
+				break;
+			case 3:
+				R2KB_COUNTER++;
+				break;
+			case 4:
+				R3KB_COUNTER++;
+				break;
+			case 5:
+				R4KB_COUNTER++;
+				break;
+		}
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
