@@ -595,7 +595,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
-	//printf("CURRENT KEY DISTRIBUTION STATUS: %.2f large keys\n", KEY_DISTRIBUTION_STATUS);
+	printf("CURRENT KEY DISTRIBUTION STATUS: %.2f\% are large keys\n", KEY_DISTRIBUTION_STATUS);
 
 	kv_pair* kv = &fio_req->kv;
 	int key_len = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
@@ -657,7 +657,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	switch (io_u->ddir) {
 
-	// Retrieve
+	// RETRIEVE
 	case DDIR_READ:
 
 		kv->param.io_option.retrieve_option = KV_RETRIEVE_DEFAULT;
@@ -680,10 +680,12 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 				printf("failed to caching\n");
 		}
 
-		printf("KV RETRIEVE | key size: %u\n", kv->key.length);
+		//printf("KV RETRIEVE | key size: %u\n", kv->key.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
+		
+	// STORE
 	case DDIR_WRITE:
 		kv->param.io_option.store_option = KV_STORE_DEFAULT;
 
@@ -697,7 +699,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 			}
 		}
 
-		printf("KV STORE | key size: %u\n", kv->key.length);
+		//printf("KV STORE | key size: %u\n", kv->key.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
