@@ -537,13 +537,10 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->fio_thread = fio_thread;
 	fio_req->key_size = fio_thread->key_size; 
 
-	//fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
-
-	fio_req->key = NULL;
+	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
 
 	//printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
-	return true;
-	//return fio_req->key == NULL;
+	return fio_req->key == NULL;
 }
 
 static void kv_fio_io_u_free(struct thread_data *td, struct io_u *io_u)
@@ -606,6 +603,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	kv->key.length = key_len;
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
+	kv_free(fio_req->key);
 	fio_req->key = kv_zalloc(MEM_ALIGN(key_len, 4));
 	fio_req->key_size = key_len;
 
