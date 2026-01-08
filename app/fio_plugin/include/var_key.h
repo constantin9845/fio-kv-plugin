@@ -65,6 +65,12 @@ static inline u_int32_t get_kv_value_size(){
 	// 28KB to 2048KB
 	// unit : 1 = 1KB
 
+	// 512 bytes
+	// 1KB
+	// 2KB
+	// 3KB
+	// 4KB
+
 	int min = 28;
 	int max = 2048;
 
