@@ -542,8 +542,8 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->key = NULL;
 
 	//printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
-
-	return fio_req->key == NULL;
+	return true;
+	//return fio_req->key == NULL;
 }
 
 static void kv_fio_io_u_free(struct thread_data *td, struct io_u *io_u)
