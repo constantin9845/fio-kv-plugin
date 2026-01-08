@@ -93,8 +93,8 @@ struct kv_fio_engine_options { //fio options
         char 		*kd;
 		double 	    kd_value;
 
-		char 		*random_value_size;
-		bool 		random_value_size_status;
+		//char 		*random_value_size;
+		//bool 		random_value_size_status;
 };
 
 static struct fio_option options[] = {
@@ -314,6 +314,7 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->kd_value = 0.1; 
 	}
 
+	/*
 	// set random value size bit
 	if(engine_option->random_value_size){
 		engine_option->random_value_size_status = atoi(engine_option->random_value_size) != 0;
@@ -321,6 +322,7 @@ static int kv_fio_setup(struct thread_data *td)
 	else{
 		engine_option->random_value_size_status = false;
 	}
+	*/
 
 	unsigned int i;
 
