@@ -125,6 +125,7 @@ static struct fio_option options[] = {
 				.help   = "KD parameter (float)",
 				.category = FIO_OPT_C_ENGINE,
 		},
+		/*
 		{
 				.name   = "random_value_size",
 				.lname	= "Random value size switch",
@@ -134,6 +135,7 @@ static struct fio_option options[] = {
 				.help   = "Random value size (bool)",
 				.category = FIO_OPT_C_ENGINE,
 		},
+		*/
 		{
                 .name   = NULL,
         },
