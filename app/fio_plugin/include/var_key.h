@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 /* VARIABLE KEY SIZE FUNCTIONS AND VARIABLES */
 
@@ -113,7 +114,7 @@ static inline u_int32_t get_kv_value_size(){
 static inline bool ratio_satisfied(double counter, int target){
 
 	if(IO_COUNTER == 0){
-		return false;
+		return 0;
 	}
 
 	double status = counter/IO_COUNTER;
