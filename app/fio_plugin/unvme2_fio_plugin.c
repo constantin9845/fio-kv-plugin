@@ -595,7 +595,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
-	printf("CURRENT KEY DISTRIBUTION STATUS: %.2f\% are large keys\n", KEY_DISTRIBUTION_STATUS);
+	printf("CURRENT KEY DISTRIBUTION STATUS: %.2f are large keys\n", KEY_DISTRIBUTION_STATUS);
 
 	kv_pair* kv = &fio_req->kv;
 	int key_len = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
