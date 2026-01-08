@@ -613,7 +613,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	fio_req->key_size = key_len;
 
 	// get value size
-	int valueKB = get_kv_value_size();
+	uint32_t valueKB = get_kv_value_size();
 
 	// override value buffer
 	kv_free(fio_req->value_buf);

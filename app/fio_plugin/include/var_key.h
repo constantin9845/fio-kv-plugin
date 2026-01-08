@@ -61,14 +61,14 @@ static inline int get_kv_key_size(double kd){
 	return k;
 }
 
-static inline int get_kv_value_size(){
+static inline u_int32_t get_kv_value_size(){
 	// 28KB to 2048KB
 	// unit : 1 = 1KB
 
 	int min = 28;
 	int max = 2048;
 
-	return (rand() % (max - min + 1)) + min;
+	return (u_int32_t)((rand() % (max - min + 1)) + min);
 }
 
 static inline u_int64_t splitmix64(u_int64_t *x){
