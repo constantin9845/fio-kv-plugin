@@ -19,4 +19,4 @@ _Atomic double R2KB_COUNTER = 0;
 _Atomic double R3KB_COUNTER = 0;
 _Atomic double R4KB_COUNTER = 0;
 
-_Atomic int LAST_IO_TYPE = 0;
+int LAST_IO_TYPE = 0;
