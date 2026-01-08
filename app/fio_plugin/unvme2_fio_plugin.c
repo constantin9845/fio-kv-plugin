@@ -621,7 +621,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
 
 	// filll value buffer
-	memset(fio_req->value_buf, 0xA5, valueKB);
+	memset(fio_req->value_buf, 0xA5, valueKB*1024);
 
 	kv->value.value = fio_req->value_buf;
 +	kv->value.length = (uint32_t)(valueKB*1024);
