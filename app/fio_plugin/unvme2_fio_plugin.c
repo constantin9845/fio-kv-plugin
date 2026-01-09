@@ -95,23 +95,14 @@ struct kv_fio_engine_options { //fio options
         char 		*kd;
 		double 	    kd_value;
 
-		char 		*variable_value_size;
+		int 		variable_value_size;
 		bool 		variable_value_size_status;
 
-		char	    *ratio_512;
-		int			ratio_512_value;
-
-		char		*ratio_1kb;
-		int			ratio_1kb_value;
-
-		char		*ratio_2kb;
-		int			ratio_2kb_value;
-
-		char		*ratio_3kb;
-		int			ratio_3kb_value;
-
-		char		*ratio_4kb;
-		int			ratio_4kb_value;
+		int          ratio_512;
+		int          ratio_1kb;
+		int          ratio_2kb;
+		int          ratio_3kb;
+		int          ratio_4kb;
 
 };
 
@@ -147,7 +138,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "variable_value_size",
 				.lname	= "variable value size switch",
-				.type   = FIO_OPT_INT,
+				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
 				.help   = "variable value size (bool)",
@@ -386,49 +377,28 @@ static int kv_fio_setup(struct thread_data *td)
 
 	
 	// set variable value size bit
-	if(engine_option->variable_value_size){
-		engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
-	}
-	else{
-		engine_option->variable_value_size_status = false;
-	}
+	engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
 
 	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 
 	// set value size ratios
-	if(
-		engine_option->ratio_512 &&
-		engine_option->ratio_1kb &&
-		engine_option->ratio_2kb &&
-		engine_option->ratio_3kb &&
-		engine_option->ratio_4kb 
-	){
-		engine_option->ratio_512_value = (engine_option->ratio_512);
-		engine_option->ratio_1kb_value = (engine_option->ratio_1kb);
-		engine_option->ratio_2kb_value = (engine_option->ratio_2kb);
-		engine_option->ratio_3kb_value = (engine_option->ratio_3kb);
-		engine_option->ratio_4kb_value = (engine_option->ratio_4kb);
+	int sum = (
+			engine_option->ratio_512 + engine_option->ratio_1kb + 
+         	engine_option->ratio_2kb + engine_option->ratio_3kb + 
+          	engine_option->ratio_4kb
+	);
 
-		// ratios dont sum to 100
-		if(
-			(engine_option->ratio_512_value + engine_option->ratio_1kb_value + engine_option->ratio_2kb_value + engine_option->ratio_3kb_value + engine_option->ratio_4kb_value) > 101 ||
-			(engine_option->ratio_512_value + engine_option->ratio_1kb_value + engine_option->ratio_2kb_value + engine_option->ratio_3kb_value + engine_option->ratio_4kb_value) < 99
-		){
-			printf("Invalid value size ratios!\n");
-			goto err;
-		}else{
-			target_r512B = engine_option->ratio_512_value;
-			target_r1KB = engine_option->ratio_1kb_value;
-			target_r2KB = engine_option->ratio_2kb_value;
-			target_r3KB = engine_option->ratio_3kb_value;
-			target_r4KB = engine_option->ratio_4kb_value;
-		}
-	}
-	// ratios undefined
-	else{
+	if(sum < 99 || sum > 101){
 		printf("Invalid value size ratios!\n");
 		goto err;
 	}
+			
+
+	target_r1KB = engine_option->ratio_512;
+	target_r1KB = engine_option->ratio_1kb;
+	target_r2KB = engine_option->ratio_2kb;
+	target_r3KB = engine_option->ratio_3kb;
+	target_r4KB = engine_option->ratio_4kb;
 
 	printf("Set options [DONE]\n");
 	
