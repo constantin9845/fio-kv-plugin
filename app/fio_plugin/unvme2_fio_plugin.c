@@ -89,10 +89,10 @@ struct kv_fio_thread {
 
 struct kv_fio_engine_options { //fio options
 
+	void    	*pad;
 	char    	*json_path;
 	char 		*kd;
 	double 	    kd_value;
-	void    	*pad;
 
 	int 		variable_value_size;
 	int         ratio_512;
@@ -138,7 +138,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "variable_value_size",
 				.lname	= "variable value size switch",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
 				.help   = "variable value size (bool)",
