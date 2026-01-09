@@ -115,7 +115,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 			R1KB_COUNTER_READ++;
 		}
 		else{
-			R1KB_COUNTER_READ++;
+			R1KB_COUNTER_WRITE++;
 		}
 		return (u_int32_t)1024; 
 	}
