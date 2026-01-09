@@ -811,9 +811,11 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	printf("[TOTAL READ  ]       : %.0f\n", IO_COUNTER_READ);
 	printf("[TOTAL WRITE ]       : %.0f\n", IO_COUNTER_WRITE);
 	printf("\n");
-	printf("[READ RATIO STATUS ] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_READ, R1KB_COUNTER_READ, R2KB_COUNTER_READ, R3KB_COUNTER_READ, R4KB_COUNTER_READ);
+	if(IO_COUNTER_READ != 0)
+		printf("[READ RATIO STATUS ] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_READ/IO_COUNTER_READ, R1KB_COUNTER_READ/IO_COUNTER_READ, R2KB_COUNTER_READ/IO_COUNTER_READ, R3KB_COUNTER_READ/IO_COUNTER_READ, R4KB_COUNTER_READ/IO_COUNTER_READ);
 	printf("\n");
-	printf("[WRITE RATIO STATUS] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_WRITE, R1KB_COUNTER_WRITE, R2KB_COUNTER_WRITE, R3KB_COUNTER_WRITE, R4KB_COUNTER_WRITE);
+	if(IO_COUNTER_WRITE != 0)
+		printf("[WRITE RATIO STATUS] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_WRITE, R1KB_COUNTER_WRITE, R2KB_COUNTER_WRITE, R3KB_COUNTER_WRITE, R4KB_COUNTER_WRITE);
 	printf("**********************************************\n");
 
 	//printf("Command completion code = %d\n", ret);
