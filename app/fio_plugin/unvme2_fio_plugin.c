@@ -115,6 +115,15 @@ static struct fio_option options[] = {
                 .help   = "JSON formmatted configuration file path",
                 .category = FIO_OPT_C_ENGINE,
         },
+		{
+				.name   = "kd",
+				.lname	= "KD factor",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, kd),
+				.def	= "0.1",
+				.help   = "KD parameter (float)",
+				.category = FIO_OPT_C_ENGINE,
+		},
         {
                 .name   = "ks",
                 .lname  = "key size for KV SSD",
@@ -125,15 +134,6 @@ static struct fio_option options[] = {
                 .help   = "Key size of KV pairs (valid only for KV SSD)",
                 .category = FIO_OPT_C_ENGINE,
         },
-		{
-				.name   = "kd",
-				.lname	= "KD factor",
-				.type   = FIO_OPT_STR_STORE,
-				.off1   = offsetof(struct kv_fio_engine_options, kd),
-				.def	= "0.1",
-				.help   = "KD parameter (float)",
-				.category = FIO_OPT_C_ENGINE,
-		},
 		
 		{
 				.name   = "variable_value_size",
