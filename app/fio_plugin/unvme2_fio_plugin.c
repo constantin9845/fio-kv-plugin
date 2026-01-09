@@ -397,7 +397,7 @@ static int kv_fio_setup(struct thread_data *td)
 	target_r4KB = engine_option->ratio_4kb;
 
 	printf("[VALUE SIZE RATIOS:]\n");
-	printf("\t[512 bytes] : %d\n", target_r1KB);
+	printf("\t[512 bytes] : %d\n", target_r512B);
 	printf("\t[1KB      ] : %d\n", target_r1KB);
 	printf("\t[2KB      ] : %d\n", target_r2KB);
 	printf("\t[3KB      ] : %d\n", target_r3KB);
