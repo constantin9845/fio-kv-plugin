@@ -363,8 +363,6 @@ static int kv_fio_setup(struct thread_data *td)
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
 
-	printf("Set options\n");
-
 	// set kd
 	if(engine_option->kd){
 		engine_option->kd_value = atof(engine_option->kd);
@@ -372,8 +370,6 @@ static int kv_fio_setup(struct thread_data *td)
 	else{
 		engine_option->kd_value = 0.1; 
 	}
-
-	printf("kd done\n");
 
 	
 	// set variable value size bit
@@ -400,7 +396,12 @@ static int kv_fio_setup(struct thread_data *td)
 	target_r3KB = engine_option->ratio_3kb;
 	target_r4KB = engine_option->ratio_4kb;
 
-	printf("Set options [DONE]\n");
+	printf("[VALUE SIZE RATIOS:]\n");
+	printf("\t[512 bytes] : %d\n", target_r1KB);
+	printf("\t[1KB      ] : %d\n", target_r1KB);
+	printf("\t[2KB      ] : %d\n", target_r2KB);
+	printf("\t[3KB      ] : %d\n", target_r3KB);
+	printf("\t[4KB      ] : %d\n", target_r4KB);
 	
 
 	unsigned int i;
@@ -443,8 +444,6 @@ static int kv_fio_setup(struct thread_data *td)
 		assert(page_size > 0);
 		g_page_mask = page_size - 1;
 	}
-
-	printf("First init done\n");
 
 	// set thread data
 	fio_thread = calloc(1, sizeof(*fio_thread));
@@ -723,6 +722,10 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		uint64_t seed = _key;
 
 		uint64_t rnd = seed ^ ((uint64_t)fio_thread->qid << 32) ^ (uint64_t)td->thread_number;
+
+		// thread numbers might not be consistent between read and write  (ie 3 threads for write, 2 threads for read) --> will result in 100% miss when reading stored kv pairs
+		// however fio does use same number of threads in rw job (verify later with hit/miss ratio comparison)
+		// uint64_t rnd = _key ^ 0xABCDEF1234567890ULL; 
 		
 		// fill key
 		size_t filled = 0;
