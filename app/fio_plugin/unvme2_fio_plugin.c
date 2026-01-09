@@ -776,7 +776,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_READ++;
 
-		printf("[KV RETRIEVE] | key size: %u | value size = %u \n", kv->key.length, kv->value.length);
+		//printf("[KV RETRIEVE] | key size: %u | value size = %u \n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -806,6 +806,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		return FIO_Q_COMPLETED;
 	}
 
+	/*
 	printf("**********************************************\n");
 	printf("[TOTAL I/O   ]       : %.0f\n", IO_COUNTER);
 	printf("[TOTAL READ  ]       : %.0f\n", IO_COUNTER_READ);
@@ -817,7 +818,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	if(IO_COUNTER_WRITE != 0)
 		printf("[WRITE RATIO STATUS] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_WRITE, R1KB_COUNTER_WRITE, R2KB_COUNTER_WRITE, R3KB_COUNTER_WRITE, R4KB_COUNTER_WRITE);
 	printf("**********************************************\n");
-
+	*/
 	//printf("Command completion code = %d\n", ret);
 
 	return (ret) ? FIO_Q_BUSY : fio_thread->fio_q_finished;
