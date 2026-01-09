@@ -20,7 +20,7 @@ iodepth=1
 
 bs=4k
 ks=16
-size=1G
+size=10G
 kd=0.1
 
 variable_value_size=1
