@@ -390,7 +390,7 @@ static int kv_fio_setup(struct thread_data *td)
 	}
 			
 
-	target_r1KB = engine_option->ratio_512;
+	target_r512B = engine_option->ratio_512;
 	target_r1KB = engine_option->ratio_1kb;
 	target_r2KB = engine_option->ratio_2kb;
 	target_r3KB = engine_option->ratio_3kb;
