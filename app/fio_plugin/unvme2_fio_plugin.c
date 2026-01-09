@@ -147,7 +147,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "variable_value_size",
 				.lname	= "variable value size switch",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
 				.help   = "variable value size (bool)",
@@ -156,7 +156,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "ratio_512",
 				.lname	= "ratio of 512 byte values",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, ratio_512),
 				.def	= "100",
 				.help   = "Ratio (/100) of values with size 512 bytes (int) [all 5 rations must sum to exactly 100!]",
@@ -165,7 +165,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "ratio_1kb",
 				.lname	= "ratio of 1KB values",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, ratio_1kb),
 				.def	= "0",
 				.help   = "Ratio (/100) of values with size 1KB (int) [all 5 rations must sum to exactly 100!]",
@@ -174,7 +174,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "ratio_2kb",
 				.lname	= "ratio of 2KB values",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, ratio_2kb),
 				.def	= "0",
 				.help   = "Ratio (/100) of values with size 2KB (int) [all 5 rations must sum to exactly 100!]",
@@ -183,7 +183,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "ratio_3kb",
 				.lname	= "ratio of 3KB values",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, ratio_3kb),
 				.def	= "0",
 				.help   = "Ratio (/100) of values with size 3KB (int) [all 5 rations must sum to exactly 100!]",
@@ -192,7 +192,7 @@ static struct fio_option options[] = {
 		{
 				.name   = "ratio_4kb",
 				.lname	= "ratio of 4KB values",
-				.type   = FIO_OPT_STR_STORE,
+				.type   = FIO_OPT_INT,
 				.off1   = offsetof(struct kv_fio_engine_options, ratio_4kb),
 				.def	= "0",
 				.help   = "Ratio (/100) of values with size 4KB (int) [all 5 rations must sum to exactly 100!]",
