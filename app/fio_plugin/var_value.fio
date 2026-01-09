@@ -12,15 +12,15 @@ direct=1
 verify=0
 
 
-rw=randrw
-rwmixread=75
+rw=randwrite
 
-iodepth=1
+
+iodepth=64
 
 
 bs=4k
 ks=16
-size=100%
+size=5G
 kd=0.1
 
 variable_value_size=1
