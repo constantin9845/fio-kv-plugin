@@ -70,61 +70,77 @@ extern int target_r2KB;
 extern int target_r3KB;
 extern int target_r4KB;
 
-extern _Atomic double R512B_COUNTER;
-extern _Atomic double R1KB_COUNTER;
-extern _Atomic double R2KB_COUNTER;
-extern _Atomic double R3KB_COUNTER;
-extern _Atomic double R4KB_COUNTER;
+extern _Atomic double R512B_COUNTER_READ;
+extern _Atomic double R1KB_COUNTER_READ;
+extern _Atomic double R2KB_COUNTER_READ;
+extern _Atomic double R3KB_COUNTER_READ;
+extern _Atomic double R4KB_COUNTER_READ;
+
+extern _Atomic double R512B_COUNTER_WRITE;
+extern _Atomic double R1KB_COUNTER_WRITE;
+extern _Atomic double R2KB_COUNTER_WRITE;
+extern _Atomic double R3KB_COUNTER_WRITE;
+extern _Atomic double R4KB_COUNTER_WRITE;
 
 extern _Atomic double IO_COUNTER;
+extern _Atomic double IO_COUNTER_READ;
+extern _Atomic double IO_COUNTER_WRITE;
 
-// 0 none
-// 1 512 | 2 1kb | 3 2kb | 4 3kb | 5 4kb
-extern int LAST_IO_TYPE;
-
-static inline bool ratio_satisfied(double counter, int target){
-
-	if(IO_COUNTER == 0){
-		return false;
-	}
-
-	double status = counter/IO_COUNTER;
-
-	return status >= target;
-}
 
 // start with largest values first and move smaller as ration satisfied
-static inline u_int32_t get_kv_value_size(){
-	// Type 1 : 512 bytes
-	// Type 2 : 1KB
-	// Type 3 : 2KB
-	// Type 4 : 3KB
-	// Type 5 : 4KB
+static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 
-	if(!ratio_satisfied(R512B_COUNTER, target_r512B)){
-		LAST_IO_TYPE = 1;
-		return (u_int32_t)512;
+	// generates stable value in range 0-99
+	u_int64_t temp_seed = seed;
+	u_int32_t prob = splitmix64(&temp_seed) % 100;
+
+	if(prob < target_r512B){ 
+		if(is_read){
+			R512B_COUNTER_READ++;
+		}
+		else{
+			R512B_COUNTER_WRITE++;
+		}
+		return (u_int32_t)512; 
 	}
-	else if(!ratio_satisfied(R1KB_COUNTER, target_r1KB)){
-		LAST_IO_TYPE = 2;
-		return (u_int32_t)1024;
+
+	if(prob < target_r512B + target_r1KB){ 
+		if(is_read){
+			R1KB_COUNTER_READ++;
+		}
+		else{
+			R1KB_COUNTER_READ++;
+		}
+		return (u_int32_t)1024; 
 	}
-	else if(!ratio_satisfied(R2KB_COUNTER, target_r2KB)){
-		LAST_IO_TYPE = 3;
-		return (u_int32_t)2048;
+
+	if(prob < target_r512B + target_r1KB + target_r2KB){ 
+		if(is_read){
+			R2KB_COUNTER_READ++;
+		}
+		else{
+			R2KB_COUNTER_WRITE++;
+		}
+		return (u_int32_t)2048; 
 	}
-	else if(!ratio_satisfied(R3KB_COUNTER, target_r3KB)){
-		LAST_IO_TYPE = 4;
-		return (u_int32_t)3072;
+
+	if(prob < target_r512B + target_r1KB + target_r2KB + target_r3KB){ 
+		if(is_read){
+			R3KB_COUNTER_READ++;
+		}
+		else{
+			R3KB_COUNTER_WRITE++;
+		}
+		return (u_int32_t)3072; 
 	}
-	else if(!ratio_satisfied(R4KB_COUNTER, target_r4KB)){
-		LAST_IO_TYPE = 5;
-		return (u_int32_t)4096;
+
+	if(is_read){
+		R4KB_COUNTER_READ++;
 	}
 	else{
-		LAST_IO_TYPE = 1;
-		return (u_int32_t)512;
+		R4KB_COUNTER_WRITE++;
 	}
+	return (u_int32_t)4096;
 }
 
 static inline u_int64_t splitmix64(u_int64_t *x){
