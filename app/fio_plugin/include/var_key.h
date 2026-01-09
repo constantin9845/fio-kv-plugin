@@ -100,7 +100,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 	u_int64_t temp_seed = seed;
 	u_int32_t prob = splitmix64(&temp_seed) % 100;
 
-	if(prob < target_r512B){ 
+	if(prob < (u_int32_t)target_r512B){ 
 		if(is_read){
 			R512B_COUNTER_READ++;
 		}
@@ -110,7 +110,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		return (u_int32_t)512; 
 	}
 
-	if(prob < target_r512B + target_r1KB){ 
+	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB){ 
 		if(is_read){
 			R1KB_COUNTER_READ++;
 		}
@@ -120,7 +120,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		return (u_int32_t)1024; 
 	}
 
-	if(prob < target_r512B + target_r1KB + target_r2KB){ 
+	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB + (u_int32_t)target_r2KB){ 
 		if(is_read){
 			R2KB_COUNTER_READ++;
 		}
@@ -130,7 +130,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		return (u_int32_t)2048; 
 	}
 
-	if(prob < target_r512B + target_r1KB + target_r2KB + target_r3KB){ 
+	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB + (u_int32_t)target_r2KB + (u_int32_t)target_r3KB){ 
 		if(is_read){
 			R3KB_COUNTER_READ++;
 		}
