@@ -921,7 +921,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 		dev_info = tmp;
 	}
 
-	free(fio_thread);
+	//free(fio_thread);
 	pthread_mutex_lock(&mutex);
 	td_count--;
 	if (td_count == 0) {
