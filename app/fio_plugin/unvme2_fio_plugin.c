@@ -776,7 +776,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_READ++;
 
-		//printf("[KV RETRIEVE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length/1024);
+		printf("[KV RETRIEVE] | key size: %u | value size = %u \n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
