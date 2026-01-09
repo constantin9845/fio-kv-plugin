@@ -382,10 +382,12 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->kd_value = 0.1; 
 	}
 
+	printf("kd done\n");
+
 	
 	// set variable value size bit
 	if(engine_option->variable_value_size){
-		engine_option->variable_value_size_status = atoi(engine_option->variable_value_size) != 0;
+		engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
 	}
 	else{
 		engine_option->variable_value_size_status = false;
@@ -401,11 +403,11 @@ static int kv_fio_setup(struct thread_data *td)
 		engine_option->ratio_3kb &&
 		engine_option->ratio_4kb 
 	){
-		engine_option->ratio_512_value = atof(engine_option->ratio_512);
-		engine_option->ratio_1kb_value = atof(engine_option->ratio_1kb);
-		engine_option->ratio_2kb_value = atof(engine_option->ratio_2kb);
-		engine_option->ratio_3kb_value = atof(engine_option->ratio_3kb);
-		engine_option->ratio_4kb_value = atof(engine_option->ratio_4kb);
+		engine_option->ratio_512_value = (engine_option->ratio_512);
+		engine_option->ratio_1kb_value = (engine_option->ratio_1kb);
+		engine_option->ratio_2kb_value = (engine_option->ratio_2kb);
+		engine_option->ratio_3kb_value = (engine_option->ratio_3kb);
+		engine_option->ratio_4kb_value = (engine_option->ratio_4kb);
 
 		// ratios dont sum to 100
 		if(
