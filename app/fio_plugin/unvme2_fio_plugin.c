@@ -919,6 +919,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 	}
 	pthread_mutex_unlock(&mutex);
 
+	printf("**********************************************\n");
 	printf("[TOTAL I/O   ]       : %.0f\n", IO_COUNTER);
 	printf("[TOTAL READ  ]       : %.0f\n", IO_COUNTER_READ);
 	printf("[TOTAL WRITE ]       : %.0f\n", IO_COUNTER_WRITE);
