@@ -86,6 +86,12 @@ extern _Atomic double IO_COUNTER;
 extern _Atomic double IO_COUNTER_READ;
 extern _Atomic double IO_COUNTER_WRITE;
 
+static inline u_int64_t splitmix64(u_int64_t *x){
+	u_int64_t z = (*x += 0x9e3779b97f4a7c15ULL);
+	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+    z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+	return z ^ (z >> 31);
+}
 
 // start with largest values first and move smaller as ration satisfied
 static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
@@ -141,13 +147,6 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		R4KB_COUNTER_WRITE++;
 	}
 	return (u_int32_t)4096;
-}
-
-static inline u_int64_t splitmix64(u_int64_t *x){
-	u_int64_t z = (*x += 0x9e3779b97f4a7c15ULL);
-	z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-    z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-	return z ^ (z >> 31);
 }
 
 #endif

@@ -615,7 +615,7 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->fio_thread = fio_thread;
 
 	// using fixed default size
-	fio_req->key_size = DEFAULT_KEY_SIZE; 
+	fio_req->key_size = 128; 
 
 	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
 
