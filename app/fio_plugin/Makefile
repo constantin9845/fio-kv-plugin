@@ -38,7 +38,7 @@ CURRENT_DIR=$(shell pwd)
 FIO_SOURCE_DIR := fio-$(SYSTEM_FIO_VERSION)
 LIBS += $(KV_DIR)/bin/libuio.a -lm -pthread -lrt -ldl -luuid -lnuma -latomic
 CFLAGS += -O2 -march=native -m64 -D_GNU_SOURCE -fsanitize=address -fno-omit-frame-pointer -g -I../fio_plugin/include -I../../include -I../../driver/include -I../external/fio/$(FIO_SOURCE_DIR) -I../../driver/external/$(SPDK_PATH)/include -std=gnu99 -fPIC -DFIO_MAJOR_VERSION=$(FIO_MAJOR_VERSION) -DFIO_MINOR_VERSION=$(FIO_MINOR_VERSION)
-override LDFLAGS += -shared -rdynamic -fsanitize=address
+override LDFLAGS += -shared -rdynamic -fsanitize=address -static-libasan
 
 APP = unvme2_fio_plugin
 C_SRCS = $(APP:%=%.c) var_key.c
