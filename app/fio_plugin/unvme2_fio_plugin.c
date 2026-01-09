@@ -88,21 +88,21 @@ struct kv_fio_thread {
 };
 
 struct kv_fio_engine_options { //fio options
-        void    	*pad;
-        char    	*json_path;
-        uint16_t    key_size;
 
-        char 		*kd;
-		double 	    kd_value;
+	char    	*json_path;
+	char 		*kd;
+	double 	    kd_value;
+	void    	*pad;
 
-		int 		variable_value_size;
-		bool 		variable_value_size_status;
+	int 		variable_value_size;
+	int         ratio_512;
+	int         ratio_1kb;
+	int         ratio_2kb;
+	int         ratio_3kb;
+	int         ratio_4kb;
 
-		int          ratio_512;
-		int          ratio_1kb;
-		int          ratio_2kb;
-		int          ratio_3kb;
-		int          ratio_4kb;
+	uint16_t    key_size;
+	uint8_t 	variable_value_size_status;
 
 };
 
@@ -921,7 +921,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 		dev_info = tmp;
 	}
 
-	//free(fio_thread);
+	free(fio_thread);
 	pthread_mutex_lock(&mutex);
 	td_count--;
 	if (td_count == 0) {
