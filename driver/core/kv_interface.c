@@ -418,6 +418,7 @@ int kv_nvme_read_async(uint64_t handle, int qid, kv_pair *kv) {
 		return KV_ERR_DD_INVALID_QUEUE_TYPE;
 	}
 
+	printf("KV value length in fio interface = %u\n", kv->value.length);
 	ret = nvme->dev_ops.read_async(nvme, kv, qid);
 
 	LEAVE();
