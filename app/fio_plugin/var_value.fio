@@ -13,14 +13,14 @@ verify=0
 
 
 rw=randrw
-rwmixread=90
+rwmixread=75
 
 iodepth=1
 
 
 bs=4k
 ks=16
-size=10G
+size=100%
 kd=0.1
 
 variable_value_size=1
