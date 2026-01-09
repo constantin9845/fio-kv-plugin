@@ -294,6 +294,8 @@ static int kv_fio_parse_config_file(char *json_path, struct thread_data *td)
 		}
 	}
 
+	printf("Parsed config file\n");
+
 	return ret;
 }
 
@@ -370,6 +372,8 @@ static int kv_fio_setup(struct thread_data *td)
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
 
+	printf("Set options\n");
+
 	// set kd
 	if(engine_option->kd){
 		engine_option->kd_value = atof(engine_option->kd);
@@ -423,6 +427,8 @@ static int kv_fio_setup(struct thread_data *td)
 		printf("Invalid value size ratios!\n");
 		goto err;
 	}
+
+	printf("Set options [DONE]\n");
 	
 
 	unsigned int i;
@@ -465,6 +471,8 @@ static int kv_fio_setup(struct thread_data *td)
 		assert(page_size > 0);
 		g_page_mask = page_size - 1;
 	}
+
+	printf("First init done\n");
 
 	// set thread data
 	fio_thread = calloc(1, sizeof(*fio_thread));
