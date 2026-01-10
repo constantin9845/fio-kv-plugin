@@ -16,14 +16,14 @@ int target_r3KB = 0;
 int target_r4KB = 0;
 
 
-_Atomic double R512B_COUNTER_READ = 0;
-_Atomic double R1KB_COUNTER_READ = 0;
-_Atomic double R2KB_COUNTER_READ = 0;
-_Atomic double R3KB_COUNTER_READ = 0;
-_Atomic double R4KB_COUNTER_READ = 0;
+_Atomic double R512B_COUNTER_READ = 1;
+_Atomic double R1KB_COUNTER_READ = 1;
+_Atomic double R2KB_COUNTER_READ = 1;
+_Atomic double R3KB_COUNTER_READ = 1;
+_Atomic double R4KB_COUNTER_READ = 1;
 
-_Atomic double R512B_COUNTER_WRITE = 0;
-_Atomic double R1KB_COUNTER_WRITE = 0;
-_Atomic double R2KB_COUNTER_WRITE = 0;
-_Atomic double R3KB_COUNTER_WRITE = 0;
-_Atomic double R4KB_COUNTER_WRITE = 0;
+_Atomic double R512B_COUNTER_WRITE = 1;
+_Atomic double R1KB_COUNTER_WRITE = 1;
+_Atomic double R2KB_COUNTER_WRITE = 1;
+_Atomic double R3KB_COUNTER_WRITE = 1;
+_Atomic double R4KB_COUNTER_WRITE = 1;
