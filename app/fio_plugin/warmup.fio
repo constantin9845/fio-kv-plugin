@@ -3,7 +3,11 @@
 ioengine=./unvme2_fio_plugin
 json_path=./unvme2_config.json
 
+# bs is actually not used
+# BOTH MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
 size=10G
+bs=4k
+
 
 thread=1
 
@@ -24,10 +28,6 @@ ratio_2kb=10
 ratio_3kb=4
 ratio_4kb=1
 
-
-
-# not used
-bs=4k
 
 # WARM UP
 [warmup]

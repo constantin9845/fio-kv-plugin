@@ -1,2 +1,2 @@
 
-sudo NRHUGE=256 script/setup.sh
+sudo NRHUGE=1024 script/setup.sh config
