@@ -112,12 +112,12 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 
 	else{
 		if(is_read){
-			R1KB_COUNTER_READ++;
+			R4KB_COUNTER_READ++;
 		}
 		else{
-			R1KB_COUNTER_WRITE++;
+			R4KB_COUNTER_WRITE++;
 		}
-		return (u_int32_t)1024; 
+		return (u_int32_t)4096; 
 	}
 	/*
 	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB){ 
