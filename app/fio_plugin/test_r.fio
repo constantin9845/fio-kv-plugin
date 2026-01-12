@@ -3,9 +3,9 @@
 ioengine=./unvme2_fio_plugin
 json_path=./unvme2_config.json
 
-# bs is actually not used
+# bs is actually not used 
 # BOTH MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
-size=6G
+size=10G
 bs=4k
 
 clat_percentiles=1
@@ -31,9 +31,10 @@ ratio_3kb=4
 ratio_4kb=1
 
 
-# WARM UP
-[warmup]
+# LOAD
+[load]
 stonewall
-rw=randwrite
-iodepth=32
-runtime=300
+rw=randread
+iodepth=1
+numjobs=1
+
