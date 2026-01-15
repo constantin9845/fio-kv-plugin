@@ -353,39 +353,37 @@ static int kv_fio_setup(struct thread_data *td)
 
 			if (name && amount_str) {
 				int amount = atoi(amount_str);
-				
-				switch(name){
-					case "64":
-						target_64 = amount;
-						values[0] = amount;
-						set[0] = true;
-						break;
-					case "128":
-						target_128 = amount;
-						values[1] = amount;
-						set[1] = true;
-						break;
-					case "256":
-						target_256 = amount;
-						values[2] = amount;
-						set[2] = true;
-						break;
-					case "512":
-						target_512 = amount;
-						values[3] = amount;
-						set[3] = true;
-						break;
-					case "1024":
-						target_1024 = amount;
-						values[4] = amount;
-						set[4] = true;
-						break;
-					default:
-						printf("INVALID INPUT\n");
-						goto err;
+
+				if(strcmp(name, "64") == 0){
+					target_64 = amount;
+					values[0] = amount;
+					set[0] = true;
+				}
+				else if(strcmp(name, "128") == 0){
+					target_128 = amount;
+					values[1] = amount;
+					set[1] = true;
+				}
+				else if(strcmp(name, "256") == 0){
+					target_256 = amount;
+					values[2] = amount;
+					set[2] = true;
+				}
+				else if(strcmp(name, "512") == 0){
+					target_512 = amount;
+					values[3] = amount;
+					set[3] = true;
+				}
+				else if(strcmp(name, "1024") == 0){
+					target_1024 = amount;
+					values[4] = amount;
+					set[4] = true;
+				}
+				else{
+					printf("INVALID RATIO INPUT\n");
+					goto err;
 				}
 			}
-
 			entry = strtok_r(NULL, ":", &saveptr1);
 		}
 
