@@ -9,21 +9,21 @@ _Atomic double IO_COUNTER = 0;
 _Atomic double IO_COUNTER_READ = 0;
 _Atomic double IO_COUNTER_WRITE = 0;
 
-int target_r512B = 100;
-int target_r1KB = 0;
-int target_r2KB = 0;
-int target_r3KB = 0;
-int target_r4KB = 0;
+int target_64 = 0;
+int target_128 = 0;
+int target_256 = 0;
+int target_512 = 0;
+int target_1024 = 0;
 
 
-_Atomic double R512B_COUNTER_READ = 1;
-_Atomic double R1KB_COUNTER_READ = 1;
-_Atomic double R2KB_COUNTER_READ = 1;
-_Atomic double R3KB_COUNTER_READ = 1;
-_Atomic double R4KB_COUNTER_READ = 1;
+_Atomic double COUNTER_READ_64 = 1;
+_Atomic double COUNTER_READ_128 = 1;
+_Atomic double COUNTER_READ_256 = 1;
+_Atomic double COUNTER_READ_512 = 1;
+_Atomic double COUNTER_READ_1024 = 1;
 
-_Atomic double R512B_COUNTER_WRITE = 1;
-_Atomic double R1KB_COUNTER_WRITE = 1;
-_Atomic double R2KB_COUNTER_WRITE = 1;
-_Atomic double R3KB_COUNTER_WRITE = 1;
-_Atomic double R4KB_COUNTER_WRITE = 1;
+_Atomic double COUNTER_WRITE_64 = 1;
+_Atomic double COUNTER_WRITE_128 = 1;
+_Atomic double COUNTER_WRITE_256 = 1;
+_Atomic double COUNTER_WRITE_512 = 1;
+_Atomic double COUNTER_WRITE_1024 = 1;

@@ -92,14 +92,10 @@ struct kv_fio_engine_options { //fio options
 	void    	*pad;
 	char    	*json_path;
 	char 		*kd;
+	char 		*value_ratio;
 	double 	    kd_value;
 
 	int 		variable_value_size;
-	int         ratio_512;
-	int         ratio_1kb;
-	int         ratio_2kb;
-	int         ratio_3kb;
-	int         ratio_4kb;
 
 	uint16_t    key_size;
 	uint8_t 	variable_value_size_status;
@@ -124,6 +120,15 @@ static struct fio_option options[] = {
 				.help   = "KD parameter (float)",
 				.category = FIO_OPT_C_ENGINE,
 		},
+		{
+				.name   = "value_ratio",
+				.lname	= "Value size ratio string",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, value_ratio),
+				.def	= "0.1",
+				.help   = "KD parameter (float)",
+				.category = FIO_OPT_C_ENGINE,
+		},
         {
                 .name   = "ks",
                 .lname  = "key size for KV SSD",
@@ -142,51 +147,6 @@ static struct fio_option options[] = {
 				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
 				.help   = "variable value size (bool)",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
-				.name   = "ratio_512",
-				.lname	= "ratio of 512 byte values",
-				.type   = FIO_OPT_INT,
-				.off1   = offsetof(struct kv_fio_engine_options, ratio_512),
-				.def	= "100",
-				.help   = "Ratio (/100) of values with size 512 bytes (int) [all 5 rations must sum to exactly 100!]",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
-				.name   = "ratio_1kb",
-				.lname	= "ratio of 1KB values",
-				.type   = FIO_OPT_INT,
-				.off1   = offsetof(struct kv_fio_engine_options, ratio_1kb),
-				.def	= "0",
-				.help   = "Ratio (/100) of values with size 1KB (int) [all 5 rations must sum to exactly 100!]",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
-				.name   = "ratio_2kb",
-				.lname	= "ratio of 2KB values",
-				.type   = FIO_OPT_INT,
-				.off1   = offsetof(struct kv_fio_engine_options, ratio_2kb),
-				.def	= "0",
-				.help   = "Ratio (/100) of values with size 2KB (int) [all 5 rations must sum to exactly 100!]",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
-				.name   = "ratio_3kb",
-				.lname	= "ratio of 3KB values",
-				.type   = FIO_OPT_INT,
-				.off1   = offsetof(struct kv_fio_engine_options, ratio_3kb),
-				.def	= "0",
-				.help   = "Ratio (/100) of values with size 3KB (int) [all 5 rations must sum to exactly 100!]",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
-				.name   = "ratio_4kb",
-				.lname	= "ratio of 4KB values",
-				.type   = FIO_OPT_INT,
-				.off1   = offsetof(struct kv_fio_engine_options, ratio_4kb),
-				.def	= "0",
-				.help   = "Ratio (/100) of values with size 4KB (int) [all 5 rations must sum to exactly 100!]",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		{
@@ -377,31 +337,103 @@ static int kv_fio_setup(struct thread_data *td)
 
 	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 
-	// set value size ratios
-	int sum = (
-			engine_option->ratio_512 + engine_option->ratio_1kb + 
-         	engine_option->ratio_2kb + engine_option->ratio_3kb + 
-          	engine_option->ratio_4kb
-	);
+	// 64, 128, 256, 512, 1024
+	if(engine_option->variable_value_size_status){
+		char *entry;
+		char *saveptr1, *saveptr2;
+		bool set[] = {false, false, false, false, false};
+		int values[] = {0,0,0,0,0};
 
-	if(sum < 99 || sum > 101){
-		printf("Invalid value size ratios!\n");
-		goto err;
+		entry = strtok_r(input, ":", &saveptr1);
+
+		while(entry != NULL){
+
+			char *name = strtok_r(entry, ".", &saveptr2);
+			char *amount_str = strtok_r(NULL, ".", &saveptr2);
+
+			if (name && amount_str) {
+				int amount = atoi(amount_str);
+				
+				switch(name){
+					case "64":
+						target_64 = amount;
+						values[0] = amount;
+						set[0] = true;
+						break;
+					case "128":
+						target_128 = amount;
+						values[1] = amount;
+						set[1] = true;
+						break;
+					case "256":
+						target_256 = amount;
+						values[2] = amount;
+						set[2] = true;
+						break;
+					case "512":
+						target_512 = amount;
+						values[3] = amount;
+						set[3] = true;
+						break;
+					case "1024":
+						target_1024 = amount;
+						values[4] = amount;
+						set[4] = true;
+						break;
+					default:
+						printf("INVALID INPUT\n");
+						goto err;
+				}
+			}
+
+			entry = strtok_r(NULL, ":", &saveptr1);
+		}
+
+		int sum = target_64 + target_128 + target_256 + target_512 + target_1024;
+
+		if(sum == 0){
+			printf("Default all values are 64 bytes\n");
+			target_64 = 100;
+			target_128 = target_256 = target_512 = target_1024 = 0;
+		}
+
+		int remain = 100;
+		int unset = 0;
+		if(sum < 99 || sum > 101){
+
+			for(int i = 0; i < 5; i++){
+				if(set[i] == true){
+					remain -= values[i];
+				}
+				else{
+					unset++;
+				}
+			}	
+
+			if(unset != 0){
+				remain = remain/unset;
+
+				if(set[0] == false) target_64=remain;
+				if(set[1] == false) target_128=remain;
+				if(set[2] == false) target_256=remain;
+				if(set[3] == false) target_512=remain;
+				if(set[4] == false) target_1024=remain;
+			}
+		}
+
+
 	}
-			
-
-	target_r512B = engine_option->ratio_512;
-	target_r1KB = engine_option->ratio_1kb;
-	target_r2KB = engine_option->ratio_2kb;
-	target_r3KB = engine_option->ratio_3kb;
-	target_r4KB = engine_option->ratio_4kb;
+	else{
+		target_64 = 100;
+		target_128 = target_256 = target_512 = target_1024 = 0;
+	}
 
 	printf("[VALUE SIZE RATIOS:]\n");
-	printf("\t[512 bytes] : %d\n", target_r512B);
-	printf("\t[1KB      ] : %d\n", target_r1KB);
-	printf("\t[2KB      ] : %d\n", target_r2KB);
-	printf("\t[3KB      ] : %d\n", target_r3KB);
-	printf("\t[4KB      ] : %d\n", target_r4KB);
+	printf("\t[64   bytes] : %d\n", target_64);
+	printf("\t[128  bytes] : %d\n", target_128);
+	printf("\t[256  bytes] : %d\n", target_256);
+	printf("\t[512  bytes] : %d\n", target_512);
+	printf("\t[1024 bytes] : %d\n", target_1024);
 	
 
 	unsigned int i;

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdatomic.h>
+#include <string.h>
 
 /* VARIABLE KEY SIZE FUNCTIONS AND VARIABLES */
 
@@ -64,23 +65,23 @@ static inline int get_kv_key_size(double kd){
 }
 
 // must sum to 100
-extern int target_r512B;
-extern int target_r1KB;
-extern int target_r2KB;
-extern int target_r3KB;
-extern int target_r4KB;
+extern int target_64;
+extern int target_128;
+extern int target_256;
+extern int target_512;
+extern int target_1024;
 
-extern _Atomic double R512B_COUNTER_READ;
-extern _Atomic double R1KB_COUNTER_READ;
-extern _Atomic double R2KB_COUNTER_READ;
-extern _Atomic double R3KB_COUNTER_READ;
-extern _Atomic double R4KB_COUNTER_READ;
+extern _Atomic double COUNTER_READ_64;
+extern _Atomic double COUNTER_READ_128;
+extern _Atomic double COUNTER_READ_256;
+extern _Atomic double COUNTER_READ_512;
+extern _Atomic double COUNTER_READ_1024;
 
-extern _Atomic double R512B_COUNTER_WRITE;
-extern _Atomic double R1KB_COUNTER_WRITE;
-extern _Atomic double R2KB_COUNTER_WRITE;
-extern _Atomic double R3KB_COUNTER_WRITE;
-extern _Atomic double R4KB_COUNTER_WRITE;
+extern _Atomic double COUNTER_WRITE_64;
+extern _Atomic double COUNTER_WRITE_128;
+extern _Atomic double COUNTER_WRITE_256;
+extern _Atomic double COUNTER_WRITE_512;
+extern _Atomic double COUNTER_WRITE_1024;
 
 extern _Atomic double IO_COUNTER;
 extern _Atomic double IO_COUNTER_READ;
@@ -100,54 +101,54 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 	u_int64_t temp_seed = seed;
 	u_int32_t prob = splitmix64(&temp_seed) % 100;
 
-	if(prob < (u_int32_t)target_r512B){ 
+	if(prob < (u_int32_t)target_64){ 
 		if(is_read){
-			R512B_COUNTER_READ++;
+			COUNTER_READ_64++;
 		}
 		else{
-			R512B_COUNTER_WRITE++;
+			COUNTER_WRITE_64++;
+		}
+		return (u_int32_t)64; 
+	}
+
+	
+	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128){ 
+		if(is_read){
+			COUNTER_READ_128++;
+		}
+		else{
+			COUNTER_WRITE_128++;
+		}
+		return (u_int32_t)128; 
+	}
+
+	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128 + (u_int32_t)target_256){ 
+		if(is_read){
+			COUNTER_READ_256++;
+		}
+		else{
+			COUNTER_WRITE_256++;
+		}
+		return (u_int32_t)256; 
+	}
+
+	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128 + (u_int32_t)target_256 + (u_int32_t)target_512){ 
+		if(is_read){
+			COUNTER_READ_512++;
+		}
+		else{
+			COUNTER_WRITE_512++;
 		}
 		return (u_int32_t)512; 
 	}
 
-	
-	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB){ 
-		if(is_read){
-			R1KB_COUNTER_READ++;
-		}
-		else{
-			R1KB_COUNTER_WRITE++;
-		}
-		return (u_int32_t)1024; 
-	}
-
-	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB + (u_int32_t)target_r2KB){ 
-		if(is_read){
-			R2KB_COUNTER_READ++;
-		}
-		else{
-			R2KB_COUNTER_WRITE++;
-		}
-		return (u_int32_t)2048; 
-	}
-
-	if(prob < (u_int32_t)target_r512B + (u_int32_t)target_r1KB + (u_int32_t)target_r2KB + (u_int32_t)target_r3KB){ 
-		if(is_read){
-			R3KB_COUNTER_READ++;
-		}
-		else{
-			R3KB_COUNTER_WRITE++;
-		}
-		return (u_int32_t)3072; 
-	}
-
 	if(is_read){
-		R4KB_COUNTER_READ++;
+		COUNTER_READ_1024++;
 	}
 	else{
-		R4KB_COUNTER_WRITE++;
+		COUNTER_WRITE_1024++;
 	}
-	return (u_int32_t)4096;
+	return (u_int32_t)1024;
 	
 }
 
