@@ -344,7 +344,7 @@ static int kv_fio_setup(struct thread_data *td)
 		bool set[] = {false, false, false, false, false};
 		int values[] = {0,0,0,0,0};
 
-		entry = strtok_r(input, ":", &saveptr1);
+		entry = strtok_r(engine_option->value_ratio, ":", &saveptr1);
 
 		while(entry != NULL){
 
