@@ -380,8 +380,7 @@ static int kv_fio_setup(struct thread_data *td)
 					set[4] = true;
 				}
 				else{
-					printf("INVALID RATIO INPUT\n");
-					goto err;
+					break;
 				}
 			}
 			entry = strtok_r(NULL, ":", &saveptr1);
