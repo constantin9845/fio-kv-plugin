@@ -5,7 +5,7 @@ json_path=./unvme2_config.json
 
 # bs is actually not used 
 # BOTH MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
-size=44G
+size=1G
 bs=120
 
 clat_percentiles=1
@@ -24,7 +24,6 @@ kd=0.1
 
 variable_value_size=1
 value_ratio=64.70:128.15:256.10:512.4:1024.1
-
 
 # LOAD
 [load]
