@@ -118,7 +118,7 @@ static struct fio_option options[] = {
 				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, value_ratio),
 				.def	= "64.100",
-				.help	= "Example: value_ratio=64.70:128.15:256.10:512.4:1024.1"
+				.help	= "Example: value_ratio=64.70:128.15:256.10:512.4:1024.1",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		{
