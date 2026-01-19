@@ -518,8 +518,7 @@ static int kv_fio_setup(struct thread_data *td)
 				}
 			}
 		}
-
-	
+	}	
 	else{
 		target_key_128 = 100;
 		target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
