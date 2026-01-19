@@ -914,7 +914,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_READ++;
 
-		printf("[KV RETRIEVE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
+		//printf("[KV RETRIEVE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -935,7 +935,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_WRITE++;
 
-		printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
+		//printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
@@ -947,7 +947,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	if(IO_COUNTER != 0)
 		kv_free(fio_req->value_buf);
 
-	/*
+	
 	printf("**********************************************\n");
 	printf("[TOTAL I/O   ]       : %.0f\n", IO_COUNTER);
 	printf("[TOTAL READ  ]       : %.0f\n", IO_COUNTER_READ);
@@ -958,8 +958,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	printf("\n");
 	if(IO_COUNTER_WRITE != 0)
 		printf("[WRITE RATIO STATUS] : [ 512B = %.2f | 1KB = %.2f | 2KB = %.2f | 3KB = %.2f | 4KB = %.2f ]\n", R512B_COUNTER_WRITE/IO_COUNTER_WRITE, R1KB_COUNTER_WRITE/IO_COUNTER_WRITE, R2KB_COUNTER_WRITE/IO_COUNTER_WRITE, R3KB_COUNTER_WRITE/IO_COUNTER_WRITE, R4KB_COUNTER_WRITE/IO_COUNTER_WRITE);
-	printf("**********************************************\n");
-	*/
+	
+	if(IO_COUNTER_READ != 0)
+		printf("[ KEY READ RATIO STATUS ] : [ 4B = %.2f | 8B = %.2f | 16B = %.2f | 32B = %.2f | 64B = %.2f | 128B = %.2f ]\n", KEY_COUNTER_READ_4/IO_COUNTER_READ, KEY_COUNTER_READ_8/IO_COUNTER_READ, KEY_COUNTER_READ_16/IO_COUNTER_READ, KEY_COUNTER_READ_32/IO_COUNTER_READ, KEY_COUNTER_READ_64/IO_COUNTER_READ, KEY_COUNTER_READ_128/IO_COUNTER_READ);
+	printf("\n");
+	if(IO_COUNTER_WRITE != 0)
+		printf("[ KEY READ RATIO STATUS ] : [ 4B = %.2f | 8B = %.2f | 16B = %.2f | 32B = %.2f | 64B = %.2f | 128B = %.2f ]\n", KEY_COUNTER_WRITE_4/IO_COUNTER_WRITE, KEY_COUNTER_WRITE_8/IO_COUNTER_WRITE, KEY_COUNTER_WRITE_16/IO_COUNTER_WRITE, KEY_COUNTER_WRITE_32/IO_COUNTER_WRITE, KEY_COUNTER_WRITE_64/IO_COUNTER_WRITE, KEY_COUNTER_WRITE_128/IO_COUNTER_WRITE);
+		printf("**********************************************\n");
+	
 	//printf("Command completion code = %d\n", ret);
 
 	return (ret) ? FIO_Q_BUSY : fio_thread->fio_q_finished;
