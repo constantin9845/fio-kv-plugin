@@ -91,14 +91,15 @@ struct kv_fio_engine_options { //fio options
 
 	void    	*pad;
 	char    	*json_path;
-	char 		*kd;
 	char 		*value_ratio;
-	double 	    kd_value;
+	char 		*key_ratio;
 
 	int 		variable_value_size;
+	int 		variable_key_size;
 
 	uint16_t    key_size;
 	uint8_t 	variable_value_size_status;
+	uint8_t 	variable_key_size_status;
 
 };
 
@@ -112,21 +113,21 @@ static struct fio_option options[] = {
                 .category = FIO_OPT_C_ENGINE,
         },
 		{
-				.name   = "kd",
-				.lname	= "KD factor",
-				.type   = FIO_OPT_STR_STORE,
-				.off1   = offsetof(struct kv_fio_engine_options, kd),
-				.def	= "0.1",
-				.help   = "KD parameter (float)",
-				.category = FIO_OPT_C_ENGINE,
-		},
-		{
 				.name   = "value_ratio",
 				.lname	= "Value size ratio string",
 				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, value_ratio),
-				.def	= "0.1",
-				.help   = "KD parameter (float)",
+				.def	= "64.100",
+				.help	= "Example: value_ratio=64.70:128.15:256.10:512.4:1024.1"
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "key_ratio",
+				.lname	= "Key size ratio string",
+				.type   = FIO_OPT_STR_STORE,
+				.off1   = offsetof(struct kv_fio_engine_options, key_ratio),
+				.def	= "128.100",
+				.help   = "Example: key_ratio=4.70:8.15:16.10:32.4:64.1",
 				.category = FIO_OPT_C_ENGINE,
 		},
         {
@@ -147,6 +148,15 @@ static struct fio_option options[] = {
 				.off1   = offsetof(struct kv_fio_engine_options, variable_value_size),
 				.def	= "0",
 				.help   = "variable value size (bool)",
+				.category = FIO_OPT_C_ENGINE,
+		},
+		{
+				.name   = "variable_key_size",
+				.lname	= "variable key size switch",
+				.type   = FIO_OPT_INT,
+				.off1   = offsetof(struct kv_fio_engine_options, variable_key_size),
+				.def	= "0",
+				.help   = "variable key size (bool)",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		{
@@ -322,21 +332,17 @@ static int kv_fio_setup(struct thread_data *td)
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
-
-	// set kd
-	if(engine_option->kd){
-		engine_option->kd_value = atof(engine_option->kd);
-	}
-	else{
-		engine_option->kd_value = 0.1; 
-	}
-
 	
 	// set variable value size bit
 	engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
 
+	// set variable key size flag
+	engine_option->variable_key_size_status = (engine_option->variable_key_size) != 0;
+
+	printf("VARIABLE KEY SIZE --> %d\n", engine_option->variable_key_size_status);
 	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 
+	// Value size distribution
 	// 64, 128, 256, 512, 1024
 	if(engine_option->variable_value_size_status){
 		char *entry;
@@ -392,6 +398,7 @@ static int kv_fio_setup(struct thread_data *td)
 			printf("Default all values are 64 bytes\n");
 			target_64 = 100;
 			target_128 = target_256 = target_512 = target_1024 = 0;
+			break;
 		}
 
 		int remain = 100;
@@ -425,12 +432,114 @@ static int kv_fio_setup(struct thread_data *td)
 		target_128 = target_256 = target_512 = target_1024 = 0;
 	}
 
-	printf("[VALUE SIZE RATIOS:]\n");
+	// Key size distributions
+	// 4,8,16,32,64,128 (default = 128)
+	if(engine_option->variable_key_size_status){
+		char *entry;
+		char *saveptr1, *saveptr2;
+		bool set[] = {false, false, false, false, false, false};
+		int values[] = {0,0,0,0,0,0};
+
+		entry = strtok_r(engine_option->key_ratio, ":", &saveptr1);
+
+		while(entry != NULL){
+			char *name = strtok_r(entry, ".", &saveptr2);
+			char *amount_str = strtok_r(NULL, ".", &saveptr2);
+
+			if (name && amount_str) {
+				int amount = atoi(amount_str);
+
+				if(strcmp(name, "4") == 0){
+					target__key_4 = amount;
+					values[0] = amount;
+					set[0] = true;
+				}
+				else if(strcmp(name, "8") == 0){
+					target_key_8 = amount;
+					values[1] = amount;
+					set[1] = true;
+				}
+				else if(strcmp(name, "16") == 0){
+					target_key_16 = amount;
+					values[2] = amount;
+					set[2] = true;
+				}
+				else if(strcmp(name, "32") == 0){
+					target_key_32 = amount;
+					values[3] = amount;
+					set[3] = true;
+				}
+				else if(strcmp(name, "64") == 0){
+					target_key_64 = amount;
+					values[4] = amount;
+					set[4] = true;
+				}
+				else if(strcmp(name, "128") == 0){
+					target_key_128 = amount;
+					values[5] = amount;
+					set[5] = true;
+				}
+				else{
+					break;
+				}
+			}
+			entry = strtok_r(NULL, ":", &saveptr1);
+		}
+
+		int sum = target_key_4 + target_key_8 + target_key_16 + target_key_32 + target_key_64 + target_key_128;
+
+		if(sum == 0){
+			printf("Default: all keys are 128 bytes\n");
+			target_key_128 = 100;
+			target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
+			break;
+		}
+
+		int remain = 100;
+		int unset = 0;
+		if(sum < 99 || sum > 101){
+
+			for(int i = 0; i < 6; i++){
+				if(set[i] == true){
+					remain -= values[i];
+				}
+				else{
+					unset++;
+				}
+			}	
+
+			if(unset != 0){
+				remain = remain/unset;
+
+				if(set[0] == false) target_key_4=remain;
+				if(set[1] == false) target_key_8=remain;
+				if(set[2] == false) target_key_16=remain;
+				if(set[3] == false) target_key_32=remain;
+				if(set[4] == false) target_key_64=remain;
+				if(set[5] == false) target_key_128=remain;
+			}
+		}
+
+	
+	else{
+		target_key_128 = 100;
+		target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
+	}
+
+	printf("\n[KEY SIZE RATIOS:]\n");
+	printf("\t[4   bytes] : %d\n", target_key_4);
+	printf("\t[8   bytes] : %d\n", target_key_8);
+	printf("\t[16  bytes] : %d\n", target_key_16);
+	printf("\t[32  bytes] : %d\n", target_key_32);
+	printf("\t[64  bytes] : %d\n\n", target_key_64);
+	printf("\t[128 bytes] : %d\n\n", target_key_128);
+
+	printf("\n[VALUE SIZE RATIOS:]\n");
 	printf("\t[64   bytes] : %d\n", target_64);
 	printf("\t[128  bytes] : %d\n", target_128);
 	printf("\t[256  bytes] : %d\n", target_256);
 	printf("\t[512  bytes] : %d\n", target_512);
-	printf("\t[1024 bytes] : %d\n", target_1024);
+	printf("\t[1024 bytes] : %d\n\n", target_1024);
 	
 
 	unsigned int i;
@@ -643,13 +752,13 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->io = io_u; 
 	fio_req->fio_thread = fio_thread;
 
-	// using fixed default size
-	fio_req->key_size = 128; 
-
-	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
+	//fio_req->key_size = 128; 
+	//fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
 
 	//printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
-	return fio_req->key == NULL;
+	
+	//return fio_req->key == NULL;
+	return false;
 }
 
 static void kv_fio_io_u_free(struct thread_data *td, struct io_u *io_u)
@@ -707,14 +816,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	// BASE SEED
 	uint64_t base_seed = io_u->offset/4096;
-
 	kv_pair* kv = &fio_req->kv;
 
-	//int key_len = get_kv_key_size(((struct kv_fio_engine_options *)td->eo)->kd_value);
-	//kv->key.length = key_len;
 
 	/* KEY */
-	kv->key.length = 128;
+	fio_req->key_size = get_kv_key_size(base_seed, (io_u->ddir == DDIR_READ)); 
+	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4));
+
+	kv->key.length = fio_req->key_size;
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
 
 
@@ -746,7 +855,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		
 		// generate 128-byte deterministic key from 64-bit seed that comes from io_u
-		const size_t LEN = 128;
+		const size_t LEN = fio_req->key_size;
 		uint8_t gen[LEN];
 
 		uint64_t rnd = base_seed;
@@ -807,7 +916,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_READ++;
 
-		//printf("[KV RETRIEVE] | key size: %u | value size = %u \n", kv->key.length, kv->value.length);
+		printf("[KV RETRIEVE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -828,7 +937,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_WRITE++;
 
-		//printf("[KV STORE] | key size: %u | value size = %u KB\n", kv->key.length, kv->value.length/1024);
+		printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
