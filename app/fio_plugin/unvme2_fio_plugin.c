@@ -140,7 +140,6 @@ static struct fio_option options[] = {
                 .help   = "Key size of KV pairs (valid only for KV SSD)",
                 .category = FIO_OPT_C_ENGINE,
         },
-		
 		{
 				.name   = "variable_value_size",
 				.lname	= "variable value size switch",
@@ -398,30 +397,30 @@ static int kv_fio_setup(struct thread_data *td)
 			printf("Default all values are 64 bytes\n");
 			target_64 = 100;
 			target_128 = target_256 = target_512 = target_1024 = 0;
-			break;
 		}
+		else{
+			int remain = 100;
+			int unset = 0;
+			if(sum < 99 || sum > 101){
 
-		int remain = 100;
-		int unset = 0;
-		if(sum < 99 || sum > 101){
+				for(int i = 0; i < 5; i++){
+					if(set[i] == true){
+						remain -= values[i];
+					}
+					else{
+						unset++;
+					}
+				}	
 
-			for(int i = 0; i < 5; i++){
-				if(set[i] == true){
-					remain -= values[i];
+				if(unset != 0){
+					remain = remain/unset;
+
+					if(set[0] == false) target_64=remain;
+					if(set[1] == false) target_128=remain;
+					if(set[2] == false) target_256=remain;
+					if(set[3] == false) target_512=remain;
+					if(set[4] == false) target_1024=remain;
 				}
-				else{
-					unset++;
-				}
-			}	
-
-			if(unset != 0){
-				remain = remain/unset;
-
-				if(set[0] == false) target_64=remain;
-				if(set[1] == false) target_128=remain;
-				if(set[2] == false) target_256=remain;
-				if(set[3] == false) target_512=remain;
-				if(set[4] == false) target_1024=remain;
 			}
 		}
 
@@ -450,7 +449,7 @@ static int kv_fio_setup(struct thread_data *td)
 				int amount = atoi(amount_str);
 
 				if(strcmp(name, "4") == 0){
-					target__key_4 = amount;
+					target_key_4 = amount;
 					values[0] = amount;
 					set[0] = true;
 				}
@@ -492,31 +491,31 @@ static int kv_fio_setup(struct thread_data *td)
 			printf("Default: all keys are 128 bytes\n");
 			target_key_128 = 100;
 			target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
-			break;
 		}
+		else{
+			int remain = 100;
+			int unset = 0;
+			if(sum < 99 || sum > 101){
 
-		int remain = 100;
-		int unset = 0;
-		if(sum < 99 || sum > 101){
+				for(int i = 0; i < 6; i++){
+					if(set[i] == true){
+						remain -= values[i];
+					}
+					else{
+						unset++;
+					}
+				}	
 
-			for(int i = 0; i < 6; i++){
-				if(set[i] == true){
-					remain -= values[i];
+				if(unset != 0){
+					remain = remain/unset;
+
+					if(set[0] == false) target_key_4=remain;
+					if(set[1] == false) target_key_8=remain;
+					if(set[2] == false) target_key_16=remain;
+					if(set[3] == false) target_key_32=remain;
+					if(set[4] == false) target_key_64=remain;
+					if(set[5] == false) target_key_128=remain;
 				}
-				else{
-					unset++;
-				}
-			}	
-
-			if(unset != 0){
-				remain = remain/unset;
-
-				if(set[0] == false) target_key_4=remain;
-				if(set[1] == false) target_key_8=remain;
-				if(set[2] == false) target_key_16=remain;
-				if(set[3] == false) target_key_32=remain;
-				if(set[4] == false) target_key_64=remain;
-				if(set[5] == false) target_key_128=remain;
 			}
 		}
 
