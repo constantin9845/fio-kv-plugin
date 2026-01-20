@@ -877,9 +877,11 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		kv->key.key = fio_req->key;
 
 		uint8_t *key_data = (uint8_t *)kv->key.key;
+		printf("KEY = ");
 		for(int k = 0; k < fio_req->key_size; k++){
 			printf("%02X ", key_data[k]);
 		}
+		printf("\n");
 
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
