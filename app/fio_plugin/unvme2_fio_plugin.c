@@ -854,10 +854,9 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	else {
 
 		
-		// generate 128-byte deterministic key from 64-bit seed that comes from io_u
+		// generate deterministic key from 64-bit seed that comes from io_u
 		const size_t LEN = fio_req->key_size;
 		uint8_t gen[LEN];
-
 		uint64_t rnd = base_seed;
 		
 		// fill key
@@ -875,13 +874,15 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		memcpy(fio_req->key, gen, LEN);
 
 		kv->key.key = fio_req->key;
-
+		/*
+		//print key 
 		uint8_t *key_data = (uint8_t *)kv->key.key;
 		printf("KEY = ");
 		for(int k = 0; k < fio_req->key_size; k++){
 			printf("%02X ", key_data[k]);
 		}
 		printf("\n");
+		*/
 
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
