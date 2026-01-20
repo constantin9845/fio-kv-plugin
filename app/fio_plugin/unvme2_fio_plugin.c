@@ -783,6 +783,15 @@ static void kv_fio_completion_cb(kv_pair *kv, unsigned int result, unsigned int 
 	fio_thread->iocq[fio_thread->iocq_head] = fio_req->io;
 	increase_iocq_head(fio_thread);
 	pthread_mutex_unlock(fio_thread->head_mutex);
+
+	if(fio_req->key){
+		kv_free(fio_req->key);
+		fio_req->key = NULL;
+	}
+	if(fio_req->value_buf){
+		kv_free(fio_req->value_buf);
+		fio_req->value_buf = NULL;
+	}
 }
 
 static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
@@ -953,12 +962,6 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		//break;
 		return FIO_Q_COMPLETED;
 	}
-
-	if(IO_COUNTER != 0){
-		kv_free(fio_req->key);
-		kv_free(fio_req->value_buf);
-	}
-
 
 	
 	//printf("Command completion code = %d\n", ret);
