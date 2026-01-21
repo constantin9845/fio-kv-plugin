@@ -3,23 +3,21 @@
 ioengine=./unvme2_fio_plugin
 json_path=./unvme2_config.json
 
-# bs is actually not used
-# BOTH MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
-size=50G
+# bs is actually not used but must average of chosen percentiles for value size --> to match size of desired fio job
+# BOTH bs and size MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
+size=12G
 bs=120
+
+thread=1
 
 clat_percentiles=1
 percentile_list=1.0:5.0:10.0:20.0:30.0:40.0:50.0:60.0:70.0:90.0:95.0:99.0:99.5:99.9:99.99:99.999:99.9999
-
-thread=1
 
 direct=1
 group_reporting=1
 
 filename=0000.00.05.0
 exitall_on_error=1
-
-ks=16
 
 variable_key_size=1
 key_ratio=128.60:64.10:32.10:16.10:8.5:4.5
@@ -31,7 +29,8 @@ value_ratio=64.70:128.15:256.10:512.4:1024.1
 [load]
 stonewall
 rw=randrw
-rwmixread=65
-iodepth=1
+rwmixread=80
+iodepth=64
 numjobs=1
-runtime=600
+random_distribution=zipf:0.99
+loops=2
