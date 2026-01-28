@@ -37,20 +37,20 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 
 # *** Phase 1 : Load ***
-echo "Phase 1: Load\n"
 sleep 2
+echo "Phase 1: Load\n"
 $FIO_COMMAND load.fio
 
 # *** Phase 2 : Warmup ***
 cleanup_memory
+sleep 10
 echo "Phase 2: Warmup\n"
-sleep 2
 $FIO_COMMAND warmup.fio
 
 # *** Phase 3 : Test run ***
 cleanup_memory
+sleep 10
 echo "Phase 3: Test\n"
-sleep 2
 $FIO_COMMAND run.fio
 
 cleanup_memory
