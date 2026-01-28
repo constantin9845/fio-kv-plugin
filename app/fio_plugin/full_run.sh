@@ -49,7 +49,7 @@ $FIO_COMMAND warmup.fio
 
 # *** Phase 3 : Test run ***
 cleanup_memory
-sleep 10
+sleep 60
 echo "Phase 3: Test\n"
 $FIO_COMMAND run.fio
 
