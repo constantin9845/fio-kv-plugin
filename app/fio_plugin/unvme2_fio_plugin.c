@@ -765,8 +765,6 @@ static void kv_fio_io_u_free(struct thread_data *td, struct io_u *io_u)
 
 	if (fio_req) {
 		assert(fio_req->io == io_u);
-		//kv_free(fio_req->key);
-		//kv_free(fio_req->value_buf);
 		free(fio_req);
 		io_u->engine_data = NULL;
 	}
@@ -828,7 +826,13 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	/* KEY */
 	fio_req->key_size = get_kv_key_size(base_seed, (io_u->ddir == DDIR_READ)); 
-	fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4));
+
+	if(!fio_req->key){
+		fio_req->key = kv_zalloc(4096);
+		if (!fio_req->key) return FIO_Q_BUSY;
+	}
+
+	//fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4));
 
 	kv->key.length = fio_req->key_size;
 	kv->keyspace_id = KV_KEYSPACE_IODATA;
@@ -837,14 +841,19 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	/* VALUE */
 	uint32_t valueKB = get_kv_value_size(base_seed, (io_u->ddir == DDIR_READ));
 
-	// override value buffer
+	// override first value buffer
 	if(IO_COUNTER == 0){
 		kv_free(fio_req->value_buf);
 	}
 		
+	if(!fio_req->value_buf){
+		fio_req->value_buf_size = 4096;
+		fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
+		if (!fio_req->value_buf) return FIO_Q_BUSY;
+	}
 
-	fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB, 4));
-	fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
+	//fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB, 4));
+	//fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
 
 	// fill value buffer
 	memset(fio_req->value_buf, 0xA5, valueKB);
