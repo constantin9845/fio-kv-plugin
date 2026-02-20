@@ -32,23 +32,21 @@ cleanup_memory(){
 }
 
 usage() {
-    echo "Usage: $0 -r [1-6] -d [uniform|zipf07|zipf099|zipf12|pareto07|pareto08|pareto09|normal5|normal25|normal50]"
+    echo "Usage: $0 -r [bimodal|uniform|mid|increasing|meta|blob] -d [uniform|zipf099|pareto08|normal20]"
     exit 1
 }
 
 while getopts ":r:d:" opt; do
   case $opt in
     r) 
-		if [[ "$OPTARG" =~ ^[1-6]$ ]]; then
-			RATIO="$OPTARG"
-		else
-			echo "Error: Value Ratio must be between 1 and 6."
-			usage
-		fi
+		case "$OPTARG" in
+			bimodal|uniform|mid|increasing|meta|blob) RATIO="$OPTARG" ;;
+			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
+		esac
 		;;
 	d)
 		case "$OPTARG" in
-			uniform|zipf07|zipf099|zipf12|pareto07|pareto08|pareto09|normal5|normal25|normal50) DIST="$OPTARG" ;;
+			uniform|zipf099|pareto08|normal20) DIST="$OPTARG" ;;
 			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
 		esac
 		;;
@@ -78,19 +76,19 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 # *** Phase 1 : Load ***
 sleep 2
-echo "Phase 1: Load --> load/W${RATIO}.fio\n"
-$FIO_COMMAND "load/W${RATIO}.fio"
+echo "Phase 1: Load --> load/${RATIO}.fio\n"
+$FIO_COMMAND "load/${RATIO}.fio"
 
 # *** Phase 2 : Warmup ***
 cleanup_memory
 sleep 10
-echo "Phase 2: Warmup --> warmup/W${RATIO}.fio\n"
-$FIO_COMMAND "warmup/W${RATIO}.fio"
+echo "Phase 2: Warmup --> warmup/${RATIO}.fio\n"
+$FIO_COMMAND "warmup/${RATIO}.fio"
 
 # *** Phase 3 : Test run ***
 cleanup_memory
 sleep 60
-echo "Phase 3: Test --> run/${DIST}/W${RATIO}.fio\n"
-$FIO_COMMAND "run/${DIST}/W${RATIO}.fio"
+echo "Phase 3: Test --> run/${DIST}/${RATIO}.fio\n"
+$FIO_COMMAND "run/${DIST}/${RATIO}.fio"
 
 cleanup_memory
