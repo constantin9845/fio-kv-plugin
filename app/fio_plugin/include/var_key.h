@@ -183,7 +183,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 	else{
 		COUNTER_WRITE_1024++;
 	}
-	return (u_int32_t)3072;
+	return (u_int32_t)4092;
 	
 }
 
