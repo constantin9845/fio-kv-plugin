@@ -143,7 +143,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		else{
 			COUNTER_WRITE_64++;
 		}
-		return (u_int32_t)64; 
+		return (u_int32_t)128; 
 	}
 
 	
@@ -154,7 +154,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		else{
 			COUNTER_WRITE_128++;
 		}
-		return (u_int32_t)128; 
+		return (u_int32_t)512; 
 	}
 
 	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128 + (u_int32_t)target_256){ 
@@ -164,7 +164,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		else{
 			COUNTER_WRITE_256++;
 		}
-		return (u_int32_t)256; 
+		return (u_int32_t)1024; 
 	}
 
 	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128 + (u_int32_t)target_256 + (u_int32_t)target_512){ 
@@ -174,7 +174,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 		else{
 			COUNTER_WRITE_512++;
 		}
-		return (u_int32_t)512; 
+		return (u_int32_t)2048; 
 	}
 
 	if(is_read){
@@ -183,7 +183,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
 	else{
 		COUNTER_WRITE_1024++;
 	}
-	return (u_int32_t)1024;
+	return (u_int32_t)3072;
 	
 }
 
