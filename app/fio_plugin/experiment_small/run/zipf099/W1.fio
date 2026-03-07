@@ -26,8 +26,7 @@ value_ratio=64.76:128.10:256.5:512.5:1024.4
 [load]
 stonewall
 rw=randrw
+randseed=101
 rwmixread=95
 iodepth=64
 random_distribution=zipf:0.99
-time_based=1
-runtime=600

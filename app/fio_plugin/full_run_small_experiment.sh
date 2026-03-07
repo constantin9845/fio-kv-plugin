@@ -32,7 +32,7 @@ cleanup_memory(){
 }
 
 usage() {
-    echo "Usage: $0 -r [W1|W2|W3] -d [uniform|zipf099|pareto08|normal20]"
+    echo "Usage: $0 -r [W1|W2|W3|W4|W5|W6] -d [uniform|zipf099|pareto08|normal20]"
     exit 1
 }
 
@@ -40,7 +40,7 @@ while getopts ":r:d:" opt; do
   case $opt in
     r) 
 		case "$OPTARG" in
-			W1|W2|W3) RATIO="$OPTARG" ;;
+			W1|W2|W3|W4|W5|W6) RATIO="$OPTARG" ;;
 			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
 		esac
 		;;

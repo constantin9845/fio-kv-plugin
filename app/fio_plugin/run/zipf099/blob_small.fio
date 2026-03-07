@@ -29,5 +29,4 @@ rwmixread=95
 iodepth=64
 numjobs=1
 random_distribution=zipf:0.99
-time_based=1
-runtime=600
+randseed=101

@@ -5,7 +5,7 @@ json_path=./unvme2_config.json
 
 # bs is actually not used but must average of chosen percentiles for value size --> to match size of desired fio job
 # BOTH bs and size MUST MATCH VALUES IN [LOAD - WARMUP - RUN fio jobs]
-size=12G
+size=5G
 bs=474
 
 
@@ -27,5 +27,4 @@ value_ratio=64.35:128.13:256.4:512.13:1024.35
 stonewall
 rw=randwrite
 iodepth=128
-time_based=1
-runtime=300
+randseed=100
