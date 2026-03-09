@@ -32,7 +32,7 @@ cleanup_memory(){
 }
 
 usage() {
-    echo "Usage: $0 -r [bimodal|blob_large|blob_small|increasing_large|increasing|small_bimodal] -d [uniform|zipf099|pareto08|normal20]"
+    echo "Usage: $0 -r [small_bimodal|bimodal|increasing|increasing_large|blob_small|blob_large] -d [uniform|zipf099|pareto08|normal20]"
     exit 1
 }
 
@@ -40,7 +40,7 @@ while getopts ":r:d:" opt; do
   case $opt in
     r) 
 		case "$OPTARG" in
-			bimodal|blob_large|blob_small|increasing_large|increasing|small_bimodal) RATIO="$OPTARG" ;;
+			small_bimodal|bimodal|increasing|increasing_large|blob_small|blob_large) RATIO="$OPTARG" ;;
 			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
 		esac
 		;;
