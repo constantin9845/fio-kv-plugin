@@ -820,7 +820,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 
 	// BASE SEED
-	uint64_t base_seed = io_u->offset;
+	uint64_t sequence_id = io_u->offset / 64; // divide by smallest possible size to prevent logical overlap
+	uint64_t base_seed = sequence_id;
 	kv_pair* kv = &fio_req->kv;
 
 
