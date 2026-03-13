@@ -878,13 +878,11 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		// generate deterministic key from 64-bit seed that comes from io_u
 		const size_t LEN = fio_req->key_size;
 		uint8_t gen[LEN];
-		uint64_t rnd = base_seed;
 		
 		// fill key
-		// We use the same seed to generate a key that will always match to this value size
 		size_t filled = 0;
 		while(filled < LEN){
-			uint64_t v = splitmix64(&rnd);
+			uint64_t v = splitmix64(&sequence_id);
 			int take = MIN(sizeof(v), LEN - filled);
 			memcpy(gen + filled, &v, take);
 			filled += take;
