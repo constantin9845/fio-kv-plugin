@@ -850,17 +850,9 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 		
 	if(!fio_req->value_buf){
-		/*
 		fio_req->value_buf_size = 8192;
 		fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
 		if (!fio_req->value_buf) return FIO_Q_BUSY;
-		*/
-
-		fio_req->value_buf_size = 8192;
-		if (posix_memalign((void**)&fio_req->value_buf, 4096, 8192) != 0) {
-			return FIO_Q_BUSY;
-		}
-		//memset(fio_req->value_buf, 0, 8192);
 	}
 
 	//fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB, 4));
