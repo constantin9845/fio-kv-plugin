@@ -821,12 +821,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	// BASE SEED
 	uint64_t sequence_id = io_u->offset / 64; // divide by smallest possible size to prevent logical overlap
-	uint64_t base_seed = sequence_id;
+	uint64_t key_prob = splitmix64(&sequence_id) % 100;
+	uint64_t value_prob = splitmix64(&sequence_id) % 100;
+
 	kv_pair* kv = &fio_req->kv; 
 
 
 	/* KEY */
-	fio_req->key_size = get_kv_key_size(base_seed, (io_u->ddir == DDIR_READ)); 
+	fio_req->key_size = get_kv_key_size(key_prob, (io_u->ddir == DDIR_READ)); 
 
 	if(!fio_req->key){
 		fio_req->key = kv_zalloc(8192);
@@ -840,7 +842,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 
 	/* VALUE */
-	uint32_t valueKB = get_kv_value_size(base_seed, (io_u->ddir == DDIR_READ));
+	uint32_t valueKB = get_kv_value_size(value_prob, (io_u->ddir == DDIR_READ));
 
 	// override first value buffer
 	if(IO_COUNTER == 0){

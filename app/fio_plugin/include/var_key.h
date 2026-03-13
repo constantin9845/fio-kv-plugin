@@ -66,10 +66,7 @@ static inline u_int64_t splitmix64(u_int64_t *x){
 	return z ^ (z >> 31);
 }
 
-static inline u_int32_t get_kv_key_size(u_int64_t seed, bool is_read){
-	// generates stable value in range 0-99
-	u_int64_t temp_seed = seed;
-	u_int32_t prob = splitmix64(&temp_seed) % 100;
+static inline u_int32_t get_kv_key_size(u_int64_t prob, bool is_read){
 
 	if(prob < (u_int32_t)target_key_4){ 
 		if(is_read){
@@ -130,11 +127,7 @@ static inline u_int32_t get_kv_key_size(u_int64_t seed, bool is_read){
 	return (u_int32_t)128;
 }
 
-static inline u_int32_t get_kv_value_size(u_int64_t seed, bool is_read){
-
-	// generates stable value in range 0-99
-	u_int64_t temp_seed = seed;
-	u_int32_t prob = splitmix64(&temp_seed) % 100;
+static inline u_int32_t get_kv_value_size(u_int64_t prob, bool is_read){
 
 	if(prob < (u_int32_t)target_64){ 
 		if(is_read){
