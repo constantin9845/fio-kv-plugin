@@ -27,12 +27,14 @@ rw=write
 iodepth=128
 numjobs=1
 randseed=99
+exec_postrun=sleep 60
 
 [warmup]
 stonewall
 rw=randwrite
 iodepth=128
 randseed=100
+exec_postrun=sleep 60
 
 [run]
 stonewall
