@@ -831,8 +831,12 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	fio_req->key_size = get_kv_key_size(key_prob, (io_u->ddir == DDIR_READ)); 
 
 	if(!fio_req->key){
-		fio_req->key = kv_zalloc(8192);
-		if (!fio_req->key) return FIO_Q_BUSY;
+		//fio_req->key = kv_zalloc(8192);
+		//if (!fio_req->key) return FIO_Q_BUSY;
+
+		if (posix_memalign((void**)&fio_req->key, 8192, 8192) != 0) {
+			return FIO_Q_BUSY;
+		}
 	}
 
 	//fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4));
@@ -851,12 +855,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		
 	if(!fio_req->value_buf){
 		fio_req->value_buf_size = 8192;
-		fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
-		if (!fio_req->value_buf) return FIO_Q_BUSY;
-	}
+		//fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
+		//if (!fio_req->value_buf) return FIO_Q_BUSY;
 
-	//fio_req->value_buf = kv_zalloc(MEM_ALIGN(valueKB, 4));
-	//fio_req->value_buf_size = fio_req->value_buf ? valueKB : 0;
+		if (posix_memalign((void**)&fio_req->value_buf, 8192, fio_req->value_buf_size) != 0) {
+        	return FIO_Q_BUSY;
+		}
+		memset(fio_req->value_buf, 0, fio_req->value_buf_size);
+	}
 
 	// fill value buffer
 	memset(fio_req->value_buf, 0xA5, valueKB);
@@ -893,15 +899,6 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		memcpy(fio_req->key, gen, LEN);
 
 		kv->key.key = fio_req->key;
-		/*
-		//print key 
-		uint8_t *key_data = (uint8_t *)kv->key.key;
-		printf("KEY = ");
-		for(int k = 0; k < fio_req->key_size; k++){
-			printf("%02X ", key_data[k]);
-		}
-		printf("\n");
-		*/
 
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
