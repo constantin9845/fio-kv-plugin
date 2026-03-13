@@ -19,7 +19,7 @@ variable_key_size=1
 key_ratio=128.60:64.30:32.5:16.3:8.1:4.1
 
 variable_value_size=1
-value_ratio=64.5:128.10:256.15:512.30:1024.40
+value_ratio=64.20:128.20:256.20:512.20:1024.20
 
 [load]
 stonewall
@@ -42,5 +42,5 @@ rw=randrw
 rwmixread=95
 iodepth=64
 numjobs=1
-random_distribution=pareto:0.8
+#random_distribution=pareto:0.8
 randseed=101
