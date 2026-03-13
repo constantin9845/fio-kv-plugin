@@ -180,4 +180,57 @@ static inline u_int32_t get_kv_value_size(u_int64_t prob, bool is_read){
 	
 }
 
+static inline void reset(void){
+	KEY_DISTRIBUTION_STATUS = 0;
+	SMALL_KEY_COUNTER = 0;
+	LARGE_KEY_COUNTER = 0;
+
+	IO_COUNTER = 0;
+	IO_COUNTER_READ = 0;
+	IO_COUNTER_WRITE = 0;
+
+	target_64 = 0;
+	target_128 = 0;
+	target_256 = 0;
+	target_512 = 0;
+	target_1024 = 0;
+
+
+	COUNTER_READ_64 = 1;
+	COUNTER_READ_128 = 1;
+	COUNTER_READ_256 = 1;
+	COUNTER_READ_512 = 1;
+	COUNTER_READ_1024 = 1;
+
+	COUNTER_WRITE_64 = 1;
+	COUNTER_WRITE_128 = 1;
+	COUNTER_WRITE_256 = 1;
+	COUNTER_WRITE_512 = 1;
+	COUNTER_WRITE_1024 = 1;
+
+
+
+	// Keys
+	target_key_4 = 0;
+	target_key_8 = 0;
+	target_key_16 = 0;
+	target_key_32 = 0;
+	target_key_64 = 0;
+	target_key_128 = 0;
+
+	KEY_COUNTER_READ_4 = 1;
+	KEY_COUNTER_READ_8 = 1;
+	KEY_COUNTER_READ_16 = 1;
+	KEY_COUNTER_READ_32 = 1;
+	KEY_COUNTER_READ_64 = 1;
+	KEY_COUNTER_READ_128 = 1;
+
+	KEY_COUNTER_WRITE_4 = 1;
+	KEY_COUNTER_WRITE_8 = 1;
+	KEY_COUNTER_WRITE_16 = 1;
+	KEY_COUNTER_WRITE_32 = 1;
+	KEY_COUNTER_WRITE_64 = 1;
+	KEY_COUNTER_WRITE_128 = 1;
+}
+
 #endif

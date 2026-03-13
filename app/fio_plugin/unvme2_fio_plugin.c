@@ -750,12 +750,7 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 	fio_req->io = io_u; 
 	fio_req->fio_thread = fio_thread;
 
-	//fio_req->key_size = 128; 
-	//fio_req->key = kv_zalloc(MEM_ALIGN(fio_req->key_size, 4)); //for long key support
-
-	//printf("IO = %p, buf = %p, key_size = %u\n", io_u, io_u->buf, fio_req->key_size);
-	
-	//return fio_req->key == NULL;
+	reset();
 	return false;
 }
 
