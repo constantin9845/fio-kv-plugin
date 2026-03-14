@@ -75,9 +75,6 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 
 # *** Run ***
-cleanup_memory
 sleep 20
 echo "Phase 3: Test --> run/${DIST}/${RATIO}.fio\n"
 $FIO_COMMAND "run/${DIST}/${RATIO}.fio"
-
-cleanup_memory
