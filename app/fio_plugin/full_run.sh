@@ -74,20 +74,9 @@ echo "Running Simulation: Ratio $RATIO with $DIST distribution..."
 FIO_COMMAND="sudo ./fio-3.3"
 
 
-# *** Phase 1 : Load ***
-sleep 2
-echo "Phase 1: Load --> load/${RATIO}.fio\n"
-$FIO_COMMAND "load/${RATIO}.fio"
-
-# *** Phase 2 : Warmup ***
+# *** Run ***
 cleanup_memory
-sleep 10
-echo "Phase 2: Warmup --> warmup/${RATIO}.fio\n"
-$FIO_COMMAND "warmup/${RATIO}.fio"
-
-# *** Phase 3 : Test run ***
-cleanup_memory
-sleep 60
+sleep 20
 echo "Phase 3: Test --> run/${DIST}/${RATIO}.fio\n"
 $FIO_COMMAND "run/${DIST}/${RATIO}.fio"
 
