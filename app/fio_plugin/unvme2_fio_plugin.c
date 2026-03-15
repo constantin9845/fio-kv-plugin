@@ -328,7 +328,7 @@ static int kv_fio_setup(struct thread_data *td)
 {
 	int ret;
 
-	reset();
+	//reset();
 
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;

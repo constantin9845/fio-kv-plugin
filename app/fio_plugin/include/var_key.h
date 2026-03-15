@@ -185,9 +185,9 @@ static inline void reset(void){
 	SMALL_KEY_COUNTER = 0;
 	LARGE_KEY_COUNTER = 0;
 
-	//IO_COUNTER = 0;
-	//IO_COUNTER_READ = 0;
-	//IO_COUNTER_WRITE = 0;
+	IO_COUNTER = 0;
+	IO_COUNTER_READ = 0;
+	IO_COUNTER_WRITE = 0;
 
 
 	COUNTER_READ_64 = 1;
