@@ -847,12 +847,14 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		
 	if(!fio_req->value_buf){
 		fio_req->value_buf_size = 8192;
+		
+		fio_req->value_buf = kv_zalloc(fio_req->value_buf_size*2);
+		if (!fio_req->value_buf) return FIO_Q_BUSY;
 
-		if (posix_memalign((void**)&fio_req->value_buf, 8192, 8192) != 0) {
-			return FIO_Q_BUSY;
-		}
-		//fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
-		//if (!fio_req->value_buf) return FIO_Q_BUSY;
+		uintptr_t addr = (uintptr_t)raw_ptr;
+		uintptr_t aligned_addr = (addr + 8191) & ~8191;
+
+		fio_req->value_buf = (void *)aligned_addr;
 	}
 
 	// fill value buffer
