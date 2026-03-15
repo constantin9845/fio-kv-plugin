@@ -326,6 +326,8 @@ static uint64_t kv_fio_calc_hugemem_size(struct thread_data *td)
 
 static int kv_fio_setup(struct thread_data *td)
 {
+	reset();
+
 	int ret;
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;
@@ -538,7 +540,6 @@ static int kv_fio_setup(struct thread_data *td)
 	printf("\t[512  bytes] : %d\n", target_512);
 	printf("\t[1024 bytes] : %d\n\n", target_1024);
 
-	reset();
 
 	
 
@@ -905,6 +906,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	// RETRIEVE
 	case DDIR_READ:
+
+		kv->value.length = 1024;
 
 		kv->param.io_option.retrieve_option = KV_RETRIEVE_DEFAULT;
 		if (kv->value.length & (KV_VALUE_LENGTH_ALIGNMENT_UNIT - 1)) {
