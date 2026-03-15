@@ -202,7 +202,18 @@ static inline void reset(void){
 	COUNTER_WRITE_512 = 1;
 	COUNTER_WRITE_1024 = 1;
 
+	target_key_4 = 0;
+	target_key_8 = 0;
+	target_key_16 = 0;
+	target_key_32 = 0;
+	target_key_64 = 0;
+	target_key_128 = 0;
 
+	target_64 = 0;
+	target_128 = 0;
+	target_256 = 0;
+	target_512 = 0;
+	target_1024 = 0;
 
 	KEY_COUNTER_READ_4 = 1;
 	KEY_COUNTER_READ_8 = 1;

@@ -327,9 +327,6 @@ static uint64_t kv_fio_calc_hugemem_size(struct thread_data *td)
 static int kv_fio_setup(struct thread_data *td)
 {
 	int ret;
-
-	//reset();
-
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
@@ -540,6 +537,9 @@ static int kv_fio_setup(struct thread_data *td)
 	printf("\t[256  bytes] : %d\n", target_256);
 	printf("\t[512  bytes] : %d\n", target_512);
 	printf("\t[1024 bytes] : %d\n\n", target_1024);
+
+	reset();
+
 	
 
 	unsigned int i;
