@@ -328,6 +328,8 @@ static int kv_fio_setup(struct thread_data *td)
 {
 	int ret;
 
+	reset();
+
 	struct kv_fio_thread *fio_thread;
 	struct fio_file *f;
 	struct kv_fio_engine_options *engine_option = td->eo;
@@ -749,8 +751,6 @@ static int kv_fio_io_u_init(struct thread_data *td, struct io_u *io_u)
 
 	fio_req->io = io_u; 
 	fio_req->fio_thread = fio_thread;
-
-	reset();
 	return false;
 }
 
