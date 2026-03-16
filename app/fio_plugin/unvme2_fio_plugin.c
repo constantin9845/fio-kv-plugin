@@ -964,7 +964,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	
 	//printf("Command completion code = %d\n", ret);
 
-	if(io_u->DDIR_READ){
+	if(io_u->ddir == DDIR_READ){
 		printf("Current Ratios: READS\n");
 		printf("Keys:\n");
 		printf("4   : %.2f | %.2f\n", KEY_COUNTER_READ_4, (KEY_COUNTER_READ_4/IO_COUNTER_READ)*100);
