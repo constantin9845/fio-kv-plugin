@@ -42,5 +42,5 @@ rw=randrw
 rwmixread=95
 iodepth=64
 numjobs=1
-random_distribution=normal:20
+random_distribution=normal:15
 randseed=101
