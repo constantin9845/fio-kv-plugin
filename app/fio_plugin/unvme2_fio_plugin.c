@@ -963,7 +963,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	
 	//printf("Command completion code = %d\n", ret);
-
+	/*
 	if(io_u->ddir == DDIR_READ){
 		printf("Current Ratios: READS\n");
 		printf("Keys:\n");
@@ -982,7 +982,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		printf("512   : %.2f | %.2f\n", COUNTER_READ_512, (COUNTER_READ_512/IO_COUNTER_READ)*100);
 		printf("1024  : %.2f | %.2f\n", COUNTER_READ_1024, (COUNTER_READ_1024/IO_COUNTER_READ)*100);
 	}
-	
+	*/
 
 	return (ret) ? FIO_Q_BUSY : fio_thread->fio_q_finished;
         // FIO_Q_COMPLETED = 0, /* completed sync */
