@@ -964,6 +964,26 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	
 	//printf("Command completion code = %d\n", ret);
 
+	if(io_u->DDIR_READ){
+		printf("Current Ratios: READS\n");
+		printf("Keys:\n");
+		printf("4   : %.2f | %.2f\n", KEY_COUNTER_READ_4, (KEY_COUNTER_READ_4/IO_COUNTER_READ)*100);
+		printf("8   : %.2f | %.2f\n", KEY_COUNTER_READ_8, (KEY_COUNTER_READ_8/IO_COUNTER_READ)*100);
+		printf("16  : %.2f | %.2f\n", KEY_COUNTER_READ_16, (KEY_COUNTER_READ_16/IO_COUNTER_READ)*100);
+		printf("32  : %.2f | %.2f\n", KEY_COUNTER_READ_32, (KEY_COUNTER_READ_32/IO_COUNTER_READ)*100);
+		printf("64  : %.2f | %.2f\n", KEY_COUNTER_READ_64, (KEY_COUNTER_READ_64/IO_COUNTER_READ)*100);
+		printf("128 : %.2f | %.2f\n", KEY_COUNTER_READ_128, (KEY_COUNTER_READ_128/IO_COUNTER_READ)*100);
+
+		printf("\n");
+		printf("Values:\n");
+		printf("64    : %.2f | %.2f\n", COUNTER_READ_64, (COUNTER_READ_64/IO_COUNTER_READ)*100);
+		printf("128   : %.2f | %.2f\n", COUNTER_READ_128, (COUNTER_READ_128/IO_COUNTER_READ)*100);
+		printf("256   : %.2f | %.2f\n", COUNTER_READ_256, (COUNTER_READ_256/IO_COUNTER_READ)*100);
+		printf("512   : %.2f | %.2f\n", COUNTER_READ_512, (COUNTER_READ_512/IO_COUNTER_READ)*100);
+		printf("1024  : %.2f | %.2f\n", COUNTER_READ_1024, (COUNTER_READ_1024/IO_COUNTER_READ)*100);
+	}
+	
+
 	return (ret) ? FIO_Q_BUSY : fio_thread->fio_q_finished;
         // FIO_Q_COMPLETED = 0, /* completed sync */
         // FIO_Q_QUEUED    = 1, /* queued, will complete async */
