@@ -18,7 +18,7 @@ exitall_on_error=1
 
 variable_key_size=1
 #key_ratio=128.60:64.30:32.5:16.3:8.1:4.1
-key_ratio=128.5:64.5:32.10:16.10:8.50:4.20
+key_ratio=128.10:64.10:32.10:16.50:8.10:4.10
 
 variable_value_size=1
 value_ratio=64.45:128.4:256.2:512.4:1024.45
