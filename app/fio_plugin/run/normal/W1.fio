@@ -16,7 +16,7 @@ filename=0000.00.05.0
 exitall_on_error=1
 
 variable_key_size=1
-key_ratio=128.5:64.5:32.5:16.70:8.5:4.5
+key_ratio=128.5:64.5:32.70:16.5:8.5:4.5
 
 variable_value_size=1
 value_ratio=64.76:128.10:256.5:512.5:1024.4
