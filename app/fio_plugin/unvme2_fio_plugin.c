@@ -907,7 +907,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	// RETRIEVE
 	case DDIR_READ:
 
-		kv->value.length = 1024;
+		kv->value.length = 4096;
 
 		kv->param.io_option.retrieve_option = KV_RETRIEVE_DEFAULT;
 		if (kv->value.length & (KV_VALUE_LENGTH_ALIGNMENT_UNIT - 1)) {
