@@ -46,7 +46,7 @@ while getopts ":r:d:" opt; do
 		;;
 	d)
 		case "$OPTARG" in
-			uniform|zipf|paret|normal) DIST="$OPTARG" ;;
+			uniform|zipf|pareto|normal) DIST="$OPTARG" ;;
 			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
 		esac
 		;;
