@@ -816,9 +816,13 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	}
 
 	// BASE SEED
-	uint64_t sequence_id = io_u->offset / 64; // divide by smallest possible size to prevent logical overlap
-	uint64_t key_prob = splitmix64(&sequence_id) % 100;
-	uint64_t value_prob = splitmix64(&sequence_id) % 100;
+	uint64_t sequence_id = io_u->offset / 64; 
+	uint64_t key_prob_seed = sequence_id + 0xABC;
+	uint64_t value_prob_seed = sequence_id + 0xDEF;
+	uint64_t key_gen_seed = sequence_id + 0x789;
+
+	uint64_t key_prob = splitmix64(&key_prob_seed) % 100;
+	uint64_t value_prob = splitmix64(&value_prob_seed) % 100;
 
 	kv_pair* kv = &fio_req->kv; 
 
@@ -873,11 +877,12 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		// generate deterministic key from 64-bit seed that comes from io_u
 		const size_t LEN = fio_req->key_size;
 		uint8_t gen[LEN];
+		uint64_t data_seed = key_gen_seed;
 		
 		// fill key
 		size_t filled = 0;
 		while(filled < LEN){
-			uint64_t v = splitmix64(&sequence_id);
+			uint64_t v = splitmix64(&data_seed);
 			int take = MIN(sizeof(v), LEN - filled);
 			memcpy(gen + filled, &v, take);
 			filled += take;
