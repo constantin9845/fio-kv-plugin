@@ -22,21 +22,18 @@ variable_value_size=1
 value_ratio=64.27:128.13:256.55:512.4:1024.1
 
 [load]
-stonewall
 rw=write
 iodepth=128
 numjobs=1
 
 
 [warmup]
-stonewall
 rw=randwrite
 iodepth=128
 randseed=100
 random_distribution=pareto:0.9
 
 [run]
-stonewall
 startdelay=60
 rw=randrw
 rwmixread=95
