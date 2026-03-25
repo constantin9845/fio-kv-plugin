@@ -36,7 +36,7 @@ randseed=100
 
 [run]
 stonewall
-exec_prerun=sleep 60
+startdelay=60
 rw=randrw
 rwmixread=95
 iodepth=64
