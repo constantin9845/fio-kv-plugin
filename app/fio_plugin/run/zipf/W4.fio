@@ -37,7 +37,7 @@ random_distribution=zipf:0.8
 
 [run]
 stonewall
-exec_prerun= sleep 120
+exec_prerun=sleep 120
 rw=randrw
 rwmixread=95
 iodepth=64
