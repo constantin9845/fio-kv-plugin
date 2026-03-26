@@ -33,14 +33,14 @@ stonewall
 rw=randwrite
 iodepth=128
 randseed=100
-random_distribution=zipf:0.8
+random_distribution=pareto:0.9
 
 [run]
 stonewall
-exec_prerun=120
+startdelay=60
 rw=randrw
 rwmixread=95
 iodepth=64
 numjobs=1
 randseed=100
-random_distribution=zipf:0.8
+random_distribution=pareto:0.9
