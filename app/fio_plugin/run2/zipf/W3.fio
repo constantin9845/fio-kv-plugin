@@ -22,6 +22,7 @@ variable_value_size=1
 value_ratio=64.27:128.13:256.55:512.4:1024.1
 
 [run]
+stonewall
 rw=randrw
 rwmixread=95
 iodepth=64
