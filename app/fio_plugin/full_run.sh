@@ -75,6 +75,10 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 
 # *** Run ***
-sleep 20
-echo "Phase 3: Test --> run/${DIST}/${RATIO}.fio\n"
-$FIO_COMMAND "run/${DIST}/${RATIO}.fio"
+sleep 10
+echo "Phase 1+2: Test --> run2/${DIST}/pre_${RATIO}.fio\n"
+$FIO_COMMAND "run2/${DIST}/${RATIO}.fio"
+
+sleep 120
+echo "Phase 3: Test --> run2/${DIST}/${RATIO}.fio\n"
+$FIO_COMMAND "run2/${DIST}/${RATIO}.fio"
