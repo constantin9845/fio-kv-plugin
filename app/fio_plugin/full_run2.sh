@@ -76,9 +76,9 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 # *** Run ***
 sleep 10
-echo "Phase 1+2: Test --> run_anykey/${DIST}/pre_${RATIO}.fio\n"
-$FIO_COMMAND "run_anykey/${DIST}/pre_${RATIO}.fio"
+echo "Phase 1+2: Test --> run_pink/${DIST}/pre_${RATIO}.fio\n"
+$FIO_COMMAND "run_pink/${DIST}/pre_${RATIO}.fio"
 
 sleep 120
-echo "Phase 3: Test --> run_anykey/${DIST}/${RATIO}.fio\n"
-$FIO_COMMAND "run_anykey/${DIST}/${RATIO}.fio"
+echo "Phase 3: Test --> run_pink/${DIST}/${RATIO}.fio\n"
+$FIO_COMMAND "run_pink/${DIST}/${RATIO}.fio"
