@@ -32,7 +32,7 @@ cleanup_memory(){
 }
 
 usage() {
-    echo "Usage: $0 -r [W1|W2|W3|W4|W5|W6] -d [uniform|zipf|pareto|normal]"
+    echo "Usage: $0 -r [W1|W2|W3|W4|W5|W6|W7|W8|W9|W10|W11|W12] -d [uniform|zipf|pareto|normal]"
     exit 1
 }
 
@@ -40,7 +40,7 @@ while getopts ":r:d:" opt; do
   case $opt in
     r) 
 		case "$OPTARG" in
-			W1|W2|W3|W4|W5|W6) RATIO="$OPTARG" ;;
+			W1|W2|W3|W4|W5|W6|W7|W8|W9|W10|W11|W12) RATIO="$OPTARG" ;;
 			*) echo "Error: Invalid distribution '$OPTARG'."; usage ;;
 		esac
 		;;
@@ -76,9 +76,9 @@ FIO_COMMAND="sudo ./fio-3.3"
 
 # *** Run ***
 sleep 10
-echo "Phase 1+2: Test --> run_anykey2/${DIST}/pre_${RATIO}.fio\n"
-$FIO_COMMAND "run_anykey2/${DIST}/pre_${RATIO}.fio"
+echo "Phase 1+2: Test --> run_anykey/${DIST}/pre_${RATIO}.fio\n"
+$FIO_COMMAND "run_anykey/${DIST}/pre_${RATIO}.fio"
 
-sleep 120
-echo "Phase 3: Test --> run_anykey2/${DIST}/${RATIO}.fio\n"
-$FIO_COMMAND "run_anykey2/${DIST}/${RATIO}.fio"
+sleep 130
+echo "Phase 3: Test --> run_anykey/${DIST}/${RATIO}.fio\n"
+$FIO_COMMAND "run_anykey/${DIST}/${RATIO}.fio"
