@@ -136,7 +136,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t prob, bool is_read){
 		else{
 			COUNTER_WRITE_64++;
 		}
-		return (u_int32_t)16; 
+		return (u_int32_t)32; 
 	}
 
 	
@@ -176,7 +176,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t prob, bool is_read){
 	else{
 		COUNTER_WRITE_1024++;
 	}
-	return (u_int32_t)2048;
+	return (u_int32_t)3072;
 	
 }
 
