@@ -157,7 +157,7 @@ static inline u_int32_t get_kv_value_size(u_int64_t prob, bool is_read){
 		else{
 			COUNTER_WRITE_256++;
 		}
-		return (u_int32_t)128; 
+		return (u_int32_t)256; 
 	}
 
 	if(prob < (u_int32_t)target_64 + (u_int32_t)target_128 + (u_int32_t)target_256 + (u_int32_t)target_512){ 
