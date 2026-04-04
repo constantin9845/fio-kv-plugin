@@ -33,3 +33,4 @@ stonewall
 rw=randwrite
 iodepth=128
 randseed=100
+random_distribution=zipf:0.8
