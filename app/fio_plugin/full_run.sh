@@ -12,11 +12,11 @@ VAR_SIZE=$1
 VAR_VR=$2
 VAR_DIST=$3
 
-echo "Executing FIO: BS=$VAR_BS, DIST=$VAR_DIST"
+echo "Executing FIO: SIZE=$VAR_SIZE RATIO=$VAR_VR, DIST=$VAR_DIST"
 sleep 10
 
 sudo SIZE=$VAR_SIZE \
-     VALUE_RATIO=$VAR_VR \
+     RATIO=$VAR_VR \
      DISTRIBUTION=$VAR_DIST \
      ./fio-3.3 run_anykey/pre.fio
 
