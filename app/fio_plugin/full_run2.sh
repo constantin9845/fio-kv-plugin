@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if all 3 arguments are provided
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 4 ]; then
     echo "Usage: $0 <size> <value_ratio> <distribution>"
     echo "Example: $0 <size1>M <size2>M 64.76:128.10:256.5 pareto:0.9"
     exit 1
