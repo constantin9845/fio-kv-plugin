@@ -24,4 +24,3 @@ rw=randwrite
 iodepth=64
 numjobs=1
 randseed=100
-random_distribution=${DISTRIBUTION}

@@ -23,11 +23,3 @@ stonewall
 rw=write
 iodepth=128
 numjobs=1
-
-
-[warmup]
-stonewall
-rw=randwrite
-iodepth=128
-randseed=100
-random_distribution=${DISTRIBUTION}
