@@ -26,7 +26,7 @@ stonewall
 startdelay=60
 rw=randrw
 rwmixread=95
-iodepth=64
+iodepth=8
 numjobs=1
 randseed=100
 random_distribution=pareto:0.9

@@ -22,7 +22,7 @@ value_ratio=${RATIO}
 stonewall
 rw=randrw
 rwmixread=95
-iodepth=32
+iodepth=64
 numjobs=1
 randseed=100
 random_distribution=${DISTRIBUTION}
