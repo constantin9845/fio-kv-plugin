@@ -13,7 +13,7 @@ filename=0000.00.05.0
 exitall_on_error=1
 
 variable_key_size=1
-key_ratio=128.10:64.40:32.50:16.0:8.0:4.0
+key_ratio=128.0:64.0:32.40:16.60:8.0:4.0
 
 variable_value_size=1
 value_ratio=${RATIO}
