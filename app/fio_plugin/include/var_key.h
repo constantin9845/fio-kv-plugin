@@ -75,7 +75,7 @@ static inline u_int32_t get_kv_key_size(u_int64_t prob, bool is_read){
 		else{
 			KEY_COUNTER_WRITE_4++;
 		}
-		return (u_int32_t)4; 
+		return (u_int32_t)31; 
 	}
 
 	if(prob < (u_int32_t)target_key_4 + (u_int32_t)target_key_8){ 
@@ -85,7 +85,7 @@ static inline u_int32_t get_kv_key_size(u_int64_t prob, bool is_read){
 		else{
 			KEY_COUNTER_WRITE_8++;
 		}
-		return (u_int32_t)8; 
+		return (u_int32_t)64; 
 	}
 
 	if(prob < (u_int32_t)target_key_4 + (u_int32_t)target_key_8 + (u_int32_t)target_key_16){ 
