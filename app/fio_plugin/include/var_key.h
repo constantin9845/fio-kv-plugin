@@ -73,34 +73,34 @@ extern _Atomic double IO_COUNTER_READ;
 extern _Atomic double IO_COUNTER_WRITE;
 
 static inline void init_keys(int key_size[6], int key_ratio[6]){
-	key1 = key_size[0]; 
-	key2 = key_size[1]; 
-	key3 = key_size[2]; 
-	key4 = key_size[3]; 
-	key5 = key_size[4]; 
-	key6 = key_size[5];
+	key_1 = key_size[0]; 
+	key_2 = key_size[1]; 
+	key_3 = key_size[2]; 
+	key_4 = key_size[3]; 
+	key_5 = key_size[4]; 
+	key_6 = key_size[5];
 
-	target_key_ratio1 = key_ratio[0]; 
-	target_key_ratio2 = key_ratio[1]; 
-	target_key_ratio3 = key_ratio[2]; 
-	target_key_ratio4 = key_ratio[3]; 
-	target_key_ratio5 = key_ratio[4]; 
-	target_key_ratio6 = key_ratio[5];  
+	target_key_ratio_1 = key_ratio[0]; 
+	target_key_ratio_2 = key_ratio[1]; 
+	target_key_ratio_3 = key_ratio[2]; 
+	target_key_ratio_4 = key_ratio[3]; 
+	target_key_ratio_5 = key_ratio[4]; 
+	target_key_ratio_6 = key_ratio[5];  
 }
 
 static inline void init_values(int value_size[5], int value_ratio[5]){
  
-	value1 = value_size[0]; 
-	value2 = value_size[1]; 
-	value3 = value_size[2]; 
-	value4 = value_size[3]; 
-	value5 = value_size[4]; 
+	value_1 = value_size[0]; 
+	value_2 = value_size[1]; 
+	value_3 = value_size[2]; 
+	value_4 = value_size[3]; 
+	value_5 = value_size[4]; 
 
-	value_target1 = value_ratio[0]; 
-	value_target2 = value_ratio[1]; 
-	value_target3 = value_ratio[2]; 
-	value_target4 = value_ratio[3]; 
-	value_target5 = value_ratio[4]; 
+	value_target_1 = value_ratio[0]; 
+	value_target_2 = value_ratio[1]; 
+	value_target_3 = value_ratio[2]; 
+	value_target_4 = value_ratio[3]; 
+	value_target_5 = value_ratio[4]; 
 }
 
 static inline u_int64_t splitmix64(u_int64_t *x){
