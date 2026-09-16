@@ -13,7 +13,7 @@ filename=0000.00.05.0
 exitall_on_error=1
 
 variable_key_size=1
-key_ratio=128.0:64.0:32.0:16.0:8.10:4.90
+key_ratio=128.0:64.0:32.0:16.5:8.55:4.40
 
 variable_value_size=1
 value_ratio=${RATIO}
@@ -21,7 +21,7 @@ value_ratio=${RATIO}
 [run]
 stonewall
 rw=randrw
-rwmixread=90
+rwmixread=70
 iodepth=32
 numjobs=1
 randseed=100
