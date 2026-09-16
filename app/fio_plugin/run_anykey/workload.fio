@@ -21,13 +21,13 @@ exitall_on_error=1
 # key_ratio=8.16.32.64.128.256_10.20.20.20.20.10 --> key ratio={size.size..}_{ratio.ratio..} (max 6)
 
 variable_key_size=1
-key_ratio=128.0:64.0:32.0:16.0:8.40:4.60
+key_ratio=8.16.32.64.128.256_10.20.20.20.20.10
 
 # Usage
 # value_ratio=8.16.32.64.128_10.20.20.20.20 --> value ratio={size.size..}_{ratio.ratio..} (max 5)
 
 variable_value_size=1
-value_ratio=${RATIO}
+value_ratio=8.16.32.64.128_10.20.20.20.20
 
 [run]
 stonewall
