@@ -337,135 +337,161 @@ static int kv_fio_setup(struct thread_data *td)
 	// set variable value size bit
 	engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
 
-	// set variable key size flag
-	engine_option->variable_key_size_status = (engine_option->variable_key_size) != 0;
+	// set variable value size bit
+engine_option->variable_value_size_status = (engine_option->variable_value_size) != 0;
 
-	printf("VARIABLE KEY SIZE --> %d\n", engine_option->variable_key_size_status);
-	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
+// set variable key size flag
+engine_option->variable_key_size_status = (engine_option->variable_key_size) != 0;
 
-	// Parse Key distribution
-	// (default = 32 bytes)
-	if(engine_option->variable_key_size_status){
-		int cnt = 0;
-		int t = 0;
-		int size[] = {0,0,0,0,0,0};
-		int ratio[] = {0,0,0,0,0,0};
+printf("VARIABLE KEY SIZE --> %d\n", engine_option->variable_key_size_status);
+printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 
-		const char *split_pos = strchr(engine_option->key_ratio, '_');
-		if(!split_pos) return -1;
-		
-		size_t size_part_len = split_pos - engine_option->key_ratio;
-		char size_buf[256];
-    	if (size_part_len >= sizeof(size_buf)) return -1;
+// Default fallback arrays
+int default_key_sizes[6]   = {32, 0, 0, 0, 0, 0};
+int default_value_sizes[6] = {1024, 0, 0, 0, 0, 0};
+int default_ratios[6]      = {100, 0, 0, 0, 0, 0};
 
-		strncpy(size_buf, input, size_part_len);
-    	size_buf[size_part_len] = '\0';
+// Parse Key distribution (default = 32 bytes)
+if (engine_option->variable_key_size_status) {
+    int cnt = 0;
+    int t = 0;
+    int size[6] = {0};
+    int ratio[6] = {0};
 
-		char *saveptr = NULL;
-		char *token = strtok_r(size_buf, ".", &saveptr);
-		while (token) {
-			size[cnt++] = atof(token);
-			if(size[cnt-1] <= 0){
-				printf("Error while parsing key ratio: invalid size [%d]\n", size[cnt-1]);
-				exit(1);
-			}
-			token = strtok_r(NULL, ".", &saveptr);
-		}
+    const char *split_pos = strchr(engine_option->key_ratio, '_');
+    if (!split_pos) return -1;
 
-		// ratios
-		char ratio_buf[256];
-		const char *ratio_part = split_pos + 1;
-    	if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
+    size_t size_part_len = split_pos - engine_option->key_ratio;
+    char size_buf[256];
+    if (size_part_len >= sizeof(size_buf)) return -1;
 
-		strcpy(ratio_buf, ratio_part);
-		int cnt2 = 0;
+    // FIX: Copy from engine_option->key_ratio instead of 'input'
+    strncpy(size_buf, engine_option->key_ratio, size_part_len);
+    size_buf[size_part_len] = '\0';
 
-		token = strtok_r(ratio_buf, ".", &saveptr);
-		while (token) {
-			ratio[cnt2++] = atof(token);
-			token = strtok_r(NULL, ".", &saveptr);
-		}
+    char *saveptr = NULL;
+    char *token = strtok_r(size_buf, ".", &saveptr);
+    while (token) {
+        if (cnt >= 6) {
+            printf("Error while parsing key ratio: too many size elements\n");
+            exit(1);
+        }
+        size[cnt] = atoi(token); // FIX: Use atoi for int
+        if (size[cnt] <= 0) {
+            printf("Error while parsing key ratio: invalid size [%d]\n", size[cnt]);
+            exit(1);
+        }
+        cnt++;
+        token = strtok_r(NULL, ".", &saveptr);
+    }
 
-		// check
-		if(cnt != cnt2){
-			printf("Error while parsing key ratio: sizes != ratios\n");
-			exit(1);
-		}
+    // Parse ratios
+    char ratio_buf[256];
+    const char *ratio_part = split_pos + 1;
+    if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
 
+    strcpy(ratio_buf, ratio_part);
+    int cnt2 = 0;
 
-		// error if total ratio < 100
-		if(t < 100){
-			printf("Error while parsing key ratio: sum(ratios) != 100\n");
-			exit(1);
-		}
+    token = strtok_r(ratio_buf, ".", &saveptr);
+    while (token) {
+        if (cnt2 >= 6) {
+            printf("Error while parsing key ratio: too many ratio elements\n");
+            exit(1);
+        }
+        ratio[cnt2] = atoi(token);
+        t += ratio[cnt2]; // FIX: Accumulate ratio sum into t
+        cnt2++;
+        token = strtok_r(NULL, ".", &saveptr);
+    }
 
-		init_keys(size, ratio);
-	}	
-	else{
-		init_keys([32,0,0,0,0,0], [100,0,0,0,0,0])
-	}
+    // Check count matching
+    if (cnt != cnt2) {
+        printf("Error while parsing key ratio: sizes != ratios\n");
+        exit(1);
+    }
 
-	// Parse Value distribution
-	// (default = 1024 bytes)
-	if(engine_option->variable_value_size_status){
-		int cnt = 0;
-		int t = 0;
-		int size[] = {0,0,0,0,0,0};
-		int ratio[] = {0,0,0,0,0,0};
+    // FIX: Correct check for exact ratio sum of 100%
+    if (t != 100) {
+        printf("Error while parsing key ratio: sum(ratios) != 100 (got %d)\n", t);
+        exit(1);
+    }
 
-		const char *split_pos = strchr(engine_option->value_ratio, '_');
-		if(!split_pos) return -1;
-		
-		size_t size_part_len = split_pos - engine_option->value_ratio;
-		char size_buf[256];
-    	if (size_part_len >= sizeof(size_buf)) return -1;
+    init_keys(size, ratio);
+} else {
+    // FIX: Pass standard C arrays
+    init_keys(default_key_sizes, default_ratios);
+}
 
-		strncpy(size_buf, input, size_part_len);
-    	size_buf[size_part_len] = '\0';
+// Parse Value distribution (default = 1024 bytes)
+if (engine_option->variable_value_size_status) {
+    int cnt = 0;
+    int t = 0;
+    int size[6] = {0};
+    int ratio[6] = {0};
 
-		char *saveptr = NULL;
-		char *token = strtok_r(size_buf, ".", &saveptr);
-		while (token) {
-			size[cnt++] = atof(token);
-			if(size[cnt-1] <= 0){
-				printf("Error while parsing value ratio: invalid size [%d]\n", size[cnt-1]);
-				exit(1);
-			}
-			token = strtok_r(NULL, ".", &saveptr);
-		}
+    const char *split_pos = strchr(engine_option->value_ratio, '_');
+    if (!split_pos) return -1;
 
-		// ratios
-		char ratio_buf[256];
-		const char *ratio_part = split_pos + 1;
-    	if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
+    size_t size_part_len = split_pos - engine_option->value_ratio;
+    char size_buf[256];
+    if (size_part_len >= sizeof(size_buf)) return -1;
 
-		strcpy(ratio_buf, ratio_part);
-		int cnt2 = 0;
+    // FIX: Copy from engine_option->value_ratio instead of 'input'
+    strncpy(size_buf, engine_option->value_ratio, size_part_len);
+    size_buf[size_part_len] = '\0';
 
-		token = strtok_r(ratio_buf, ".", &saveptr);
-		while (token) {
-			ratio[cnt2++] = atof(token);
-			token = strtok_r(NULL, ".", &saveptr);
-		}
+    char *saveptr = NULL;
+    char *token = strtok_r(size_buf, ".", &saveptr);
+    while (token) {
+        if (cnt >= 6) {
+            printf("Error while parsing value ratio: too many size elements\n");
+            exit(1);
+        }
+        size[cnt] = atoi(token);
+        if (size[cnt] <= 0) {
+            printf("Error while parsing value ratio: invalid size [%d]\n", size[cnt]);
+            exit(1);
+        }
+        cnt++;
+        token = strtok_r(NULL, ".", &saveptr);
+    }
 
-		// check
-		if(cnt != cnt2){
-			printf("Error while parsing value ratio: sizes != ratios\n");
-			exit(1);
-		}
+    // Parse ratios
+    char ratio_buf[256];
+    const char *ratio_part = split_pos + 1;
+    if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
 
+    strcpy(ratio_buf, ratio_part);
+    int cnt2 = 0;
 
-		// error if total ratio < 100
-		if(t < 100){
-			printf("Error while parsing value ratio: sum(ratios) != 100\n");
-			exit(1);
-		}
+    token = strtok_r(ratio_buf, ".", &saveptr);
+    while (token) {
+        if (cnt2 >= 6) {
+            printf("Error while parsing value ratio: too many ratio elements\n");
+            exit(1);
+        }
+        ratio[cnt2] = atoi(token);
+        t += ratio[cnt2]; // FIX: Accumulate ratio sum into t
+        cnt2++;
+        token = strtok_r(NULL, ".", &saveptr);
+    }
 
-		init_values(size, ratio);
-	}	
-	else{
-		init_values([1024,0,0,0,0,0], [100,0,0,0,0,0])
-	}
+    if (cnt != cnt2) {
+        printf("Error while parsing value ratio: sizes != ratios\n");
+        exit(1);
+    }
+
+    if (t != 100) {
+        printf("Error while parsing value ratio: sum(ratios) != 100 (got %d)\n", t);
+        exit(1);
+    }
+
+    init_values(size, ratio);
+} else {
+    // FIX: Pass standard C arrays
+    init_values(default_value_sizes, default_ratios);
+}
 	
 	
 	printf("\n[KEY SIZE RATIOS:]\n");
