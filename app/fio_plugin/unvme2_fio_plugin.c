@@ -1028,10 +1028,42 @@ static void kv_fio_cleanup(struct thread_data *td)
 	printf("[TOTAL WRITE ]       : %.0f\n", IO_COUNTER_WRITE);
 	printf("\n");
 	if(IO_COUNTER_READ != 0)
-		printf("[READ RATIO STATUS ] : [ 64B = %.2f | 128B = %.2f | 256B = %.2f | 512B = %.2f | 1024B = %.2f ]\n", COUNTER_READ_64/IO_COUNTER_READ, COUNTER_READ_128/IO_COUNTER_READ, COUNTER_READ_256/IO_COUNTER_READ, COUNTER_READ_512/IO_COUNTER_READ, COUNTER_READ_1024/IO_COUNTER_READ);
+		printf("[READ RATIO STATUS ] : 
+			[ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
+			 value1,
+			 VALUE_COUNTER_READ_1/IO_COUNTER_READ, 
+
+			 value2
+			 VALUE_COUNTER_READ_2/IO_COUNTER_READ, 
+
+			 value3,
+			 VALUE_COUNTER_READ_3/IO_COUNTER_READ, 
+
+			 value4,
+			 VALUE_COUNTER_READ_4/IO_COUNTER_READ, 
+
+			 value5,
+			 VALUE_COUNTER_READ_5/IO_COUNTER_READ
+			);
 	printf("\n");
 	if(IO_COUNTER_WRITE != 0)
-		printf("[WRITE RATIO STATUS] : [ 64B = %.2f | 128B = %.2f | 256B = %.2f | 512B = %.2f | 1024B = %.2f ]\n", COUNTER_WRITE_64/IO_COUNTER_WRITE, COUNTER_WRITE_128/IO_COUNTER_WRITE, COUNTER_WRITE_256/IO_COUNTER_WRITE, COUNTER_WRITE_512/IO_COUNTER_WRITE, COUNTER_WRITE_1024/IO_COUNTER_WRITE);
+		printf("[WRITE RATIO STATUS] : 
+			[ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
+			 value1,
+			 VALUE_COUNTER_WRITE_1/IO_COUNTER_WRITE, 
+
+			 value2
+			 VALUE_COUNTER_WRITE_2/IO_COUNTER_WRITE, 
+
+			 value3,
+			 VALUE_COUNTER_WRITE_3/IO_COUNTER_WRITE, 
+
+			 value4,
+			 VALUE_COUNTER_WRITE_4/IO_COUNTER_WRITE, 
+
+			 value5,
+			 VALUE_COUNTER_WRITE_5/IO_COUNTER_WRITE
+			);
 	printf("**********************************************\n");
 }
 
