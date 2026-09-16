@@ -1029,37 +1029,37 @@ static void kv_fio_cleanup(struct thread_data *td)
 	printf("\n");
 	if(IO_COUNTER_READ != 0)
 		printf("[READ RATIO STATUS ] : [ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
-			 value1,
+			 value_1,
 			 VALUE_COUNTER_READ_1/IO_COUNTER_READ, 
 
-			 value2
+			 value_2
 			 VALUE_COUNTER_READ_2/IO_COUNTER_READ, 
 
-			 value3,
+			 value_3,
 			 VALUE_COUNTER_READ_3/IO_COUNTER_READ, 
 
-			 value4,
+			 value_4,
 			 VALUE_COUNTER_READ_4/IO_COUNTER_READ, 
 
-			 value5,
+			 value_5,
 			 VALUE_COUNTER_READ_5/IO_COUNTER_READ
 			);
 	printf("\n");
 	if(IO_COUNTER_WRITE != 0)
 		printf("[WRITE RATIO STATUS] : [ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
-			 value1,
+			 value_1,
 			 VALUE_COUNTER_WRITE_1/IO_COUNTER_WRITE, 
 
-			 value2
+			 value_2
 			 VALUE_COUNTER_WRITE_2/IO_COUNTER_WRITE, 
 
-			 value3,
+			 value_3,
 			 VALUE_COUNTER_WRITE_3/IO_COUNTER_WRITE, 
 
-			 value4,
+			 value_4,
 			 VALUE_COUNTER_WRITE_4/IO_COUNTER_WRITE, 
 
-			 value5,
+			 value_5,
 			 VALUE_COUNTER_WRITE_5/IO_COUNTER_WRITE
 			);
 	printf("**********************************************\n");
