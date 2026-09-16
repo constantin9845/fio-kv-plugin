@@ -470,18 +470,18 @@ static int kv_fio_setup(struct thread_data *td)
 	
 	printf("\n[KEY SIZE RATIOS:]\n");
 	printf("\t[%d  bytes] : [%d %%]\n", key_1, target_key_ratio_1);
-	printf("\t[%d  bytes] : [%d %%]\n", key_2, , target_key_ratio_2);
-	printf("\t[%d  bytes] : [%d %%]\n", key_3, , target_key_ratio_3);
-	printf("\t[%d  bytes] : [%d %%]\n", key_4, , target_key_ratio_4);
-	printf("\t[%d  bytes] : [%d %%]\n", key_5, , target_key_ratio_5);
-	printf("\t[%d  bytes] : [%d %%]\n\n", key_6, , target_key_ratio_6);
+	printf("\t[%d  bytes] : [%d %%]\n", key_2, target_key_ratio_2);
+	printf("\t[%d  bytes] : [%d %%]\n", key_3, target_key_ratio_3);
+	printf("\t[%d  bytes] : [%d %%]\n", key_4, target_key_ratio_4);
+	printf("\t[%d  bytes] : [%d %%]\n", key_5, target_key_ratio_5);
+	printf("\t[%d  bytes] : [%d %%]\n\n", key_6, target_key_ratio_6);
 
 	printf("\n[VALUE SIZE RATIOS:]\n");
 	printf("\t[%d  bytes] : [%d %%]\n", value_1, value_target_1);
-	printf("\t[%d  bytes] : [%d %%]\n", value_2, , value_target_2);
-	printf("\t[%d  bytes] : [%d %%]\n", value_3, , value_target_3);
-	printf("\t[%d  bytes] : [%d %%]\n", value_4, , value_target_4);
-	printf("\t[%d  bytes] : [%d %%]\n\n", value_5, , value_target_5);
+	printf("\t[%d  bytes] : [%d %%]\n", value_2, value_target_2);
+	printf("\t[%d  bytes] : [%d %%]\n", value_3, value_target_3);
+	printf("\t[%d  bytes] : [%d %%]\n", value_4, value_target_4);
+	printf("\t[%d  bytes] : [%d %%]\n\n", value_5, value_target_5);
 
 	unsigned int i;
 
