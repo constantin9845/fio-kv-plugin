@@ -117,8 +117,8 @@ static struct fio_option options[] = {
 				.lname	= "Value size ratio string",
 				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, value_ratio),
-				.def	= "64.100",
-				.help	= "Example: value_ratio=64.70:128.15:256.10:512.4:1024.1",
+				.def	= "1024_100",
+				.help	= "Example: value_ratio=64.128.256.512.1024_70.15.10.4.1 --> value ratio={size.size..}_{ratio.ratio..} (max 5)",
 				.category = FIO_OPT_C_ENGINE,
 		},
 		{
@@ -126,8 +126,9 @@ static struct fio_option options[] = {
 				.lname	= "Key size ratio string",
 				.type   = FIO_OPT_STR_STORE,
 				.off1   = offsetof(struct kv_fio_engine_options, key_ratio),
-				.def	= "128.100",
-				.help   = "Example: key_ratio=4.70:8.15:16.10:32.4:64.1",
+				.def	= "32_100",
+				.help	= "Example: key_ratio=8.16.32.64.128.256_10.20.20.20.20.10 --> key ratio={size.size..}_{ratio.ratio..} (max 6)",
+				.category = FIO_OPT_C_ENGINE,
 				.category = FIO_OPT_C_ENGINE,
 		},
         {
@@ -342,206 +343,145 @@ static int kv_fio_setup(struct thread_data *td)
 	printf("VARIABLE KEY SIZE --> %d\n", engine_option->variable_key_size_status);
 	printf("VARIABLE VALUE SIZE --> %d\n", engine_option->variable_value_size_status);
 
-	// Value size distribution
-	// 64, 128, 256, 512, 1024
-	if(engine_option->variable_value_size_status){
-		char *entry;
-		char *saveptr1, *saveptr2;
-		bool set[] = {false, false, false, false, false};
-		int values[] = {0,0,0,0,0};
-
-		entry = strtok_r(engine_option->value_ratio, ":", &saveptr1);
-
-		while(entry != NULL){
-
-			char *name = strtok_r(entry, ".", &saveptr2);
-			char *amount_str = strtok_r(NULL, ".", &saveptr2);
-
-			if (name && amount_str) {
-				int amount = atoi(amount_str);
-
-				if(strcmp(name, "64") == 0){
-					target_64 = amount;
-					values[0] = amount;
-					set[0] = true;
-				}
-				else if(strcmp(name, "128") == 0){
-					target_128 = amount;
-					values[1] = amount;
-					set[1] = true;
-				}
-				else if(strcmp(name, "256") == 0){
-					target_256 = amount;
-					values[2] = amount;
-					set[2] = true;
-				}
-				else if(strcmp(name, "512") == 0){
-					target_512 = amount;
-					values[3] = amount;
-					set[3] = true;
-				}
-				else if(strcmp(name, "1024") == 0){
-					target_1024 = amount;
-					values[4] = amount;
-					set[4] = true;
-				}
-				else{
-					break;
-				}
-			}
-			entry = strtok_r(NULL, ":", &saveptr1);
-		}
-
-		int sum = target_64 + target_128 + target_256 + target_512 + target_1024;
-
-		if(sum == 0){
-			printf("Default all values are 64 bytes\n");
-			target_64 = 100;
-			target_128 = target_256 = target_512 = target_1024 = 0;
-		}
-		else{
-			int remain = 100;
-			int unset = 0;
-			if(sum < 99 || sum > 101){
-
-				for(int i = 0; i < 5; i++){
-					if(set[i] == true){
-						remain -= values[i];
-					}
-					else{
-						unset++;
-					}
-				}	
-
-				if(unset != 0){
-					remain = remain/unset;
-
-					if(set[0] == false) target_64=remain;
-					if(set[1] == false) target_128=remain;
-					if(set[2] == false) target_256=remain;
-					if(set[3] == false) target_512=remain;
-					if(set[4] == false) target_1024=remain;
-				}
-			}
-		}
-
-
-	}
-	else{
-		target_64 = 100;
-		target_128 = target_256 = target_512 = target_1024 = 0;
-	}
-
-	// Key size distributions
-	// 4,8,16,32,64,128 (default = 128)
+	// Parse Key distribution
+	// (default = 32 bytes)
 	if(engine_option->variable_key_size_status){
-		char *entry;
-		char *saveptr1, *saveptr2;
-		bool set[] = {false, false, false, false, false, false};
-		int values[] = {0,0,0,0,0,0};
+		int cnt = 0;
+		int t = 0;
+		int size[] = {0,0,0,0,0,0};
+		int ratio[] = {0,0,0,0,0,0};
 
-		entry = strtok_r(engine_option->key_ratio, ":", &saveptr1);
+		const char *split_pos = strchr(engine_option->key_ratio, '_');
+		if(!split_pos) return -1;
+		
+		size_t size_part_len = split_pos - engine_option->key_ratio;
+		char size_buf[256];
+    	if (size_part_len >= sizeof(size_buf)) return -1;
 
-		while(entry != NULL){
-			char *name = strtok_r(entry, ".", &saveptr2);
-			char *amount_str = strtok_r(NULL, ".", &saveptr2);
+		strncpy(size_buf, input, size_part_len);
+    	size_buf[size_part_len] = '\0';
 
-			if (name && amount_str) {
-				int amount = atoi(amount_str);
-
-				if(strcmp(name, "4") == 0){
-					target_key_4 = amount;
-					values[0] = amount;
-					set[0] = true;
-				}
-				else if(strcmp(name, "8") == 0){
-					target_key_8 = amount;
-					values[1] = amount;
-					set[1] = true;
-				}
-				else if(strcmp(name, "16") == 0){
-					target_key_16 = amount;
-					values[2] = amount;
-					set[2] = true;
-				}
-				else if(strcmp(name, "32") == 0){
-					target_key_32 = amount;
-					values[3] = amount;
-					set[3] = true;
-				}
-				else if(strcmp(name, "64") == 0){
-					target_key_64 = amount;
-					values[4] = amount;
-					set[4] = true;
-				}
-				else if(strcmp(name, "128") == 0){
-					target_key_128 = amount;
-					values[5] = amount;
-					set[5] = true;
-				}
-				else{
-					break;
-				}
+		char *saveptr = NULL;
+		char *token = strtok_r(size_buf, ".", &saveptr);
+		while (token) {
+			size[cnt++] = atof(token);
+			if(size[cnt-1] <= 0){
+				printf("Error while parsing key ratio: invalid size [%d]\n", size[cnt-1]);
+				exit(1);
 			}
-			entry = strtok_r(NULL, ":", &saveptr1);
+			token = strtok_r(NULL, ".", &saveptr);
 		}
 
-		int sum = target_key_4 + target_key_8 + target_key_16 + target_key_32 + target_key_64 + target_key_128;
+		// ratios
+		char ratio_buf[256];
+		const char *ratio_part = split_pos + 1;
+    	if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
 
-		if(sum == 0){
-			printf("Default: all keys are 128 bytes\n");
-			target_key_128 = 100;
-			target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
+		strcpy(ratio_buf, ratio_part);
+		int cnt2 = 0;
+
+		token = strtok_r(ratio_buf, ".", &saveptr);
+		while (token) {
+			ratio[cnt2++] = atof(token);
+			token = strtok_r(NULL, ".", &saveptr);
 		}
-		else{
-			int remain = 100;
-			int unset = 0;
-			if(sum < 99 || sum > 101){
 
-				for(int i = 0; i < 6; i++){
-					if(set[i] == true){
-						remain -= values[i];
-					}
-					else{
-						unset++;
-					}
-				}	
-
-				if(unset != 0){
-					remain = remain/unset;
-
-					if(set[0] == false) target_key_4=remain;
-					if(set[1] == false) target_key_8=remain;
-					if(set[2] == false) target_key_16=remain;
-					if(set[3] == false) target_key_32=remain;
-					if(set[4] == false) target_key_64=remain;
-					if(set[5] == false) target_key_128=remain;
-				}
-			}
+		// check
+		if(cnt != cnt2){
+			printf("Error while parsing key ratio: sizes != ratios\n");
+			exit(1);
 		}
+
+
+		// error if total ratio < 100
+		if(t < 100){
+			printf("Error while parsing key ratio: sum(ratios) != 100\n");
+			exit(1);
+		}
+
+		init_keys(size, ratio);
 	}	
 	else{
-		target_key_128 = 100;
-		target_key_4 = target_key_8 = target_key_16 = target_key_32 = target_key_64 = 0;
+		init_keys([32,0,0,0,0,0], [100,0,0,0,0,0])
 	}
 
+	// Parse Value distribution
+	// (default = 1024 bytes)
+	if(engine_option->variable_value_size_status){
+		int cnt = 0;
+		int t = 0;
+		int size[] = {0,0,0,0,0,0};
+		int ratio[] = {0,0,0,0,0,0};
+
+		const char *split_pos = strchr(engine_option->value_ratio, '_');
+		if(!split_pos) return -1;
+		
+		size_t size_part_len = split_pos - engine_option->value_ratio;
+		char size_buf[256];
+    	if (size_part_len >= sizeof(size_buf)) return -1;
+
+		strncpy(size_buf, input, size_part_len);
+    	size_buf[size_part_len] = '\0';
+
+		char *saveptr = NULL;
+		char *token = strtok_r(size_buf, ".", &saveptr);
+		while (token) {
+			size[cnt++] = atof(token);
+			if(size[cnt-1] <= 0){
+				printf("Error while parsing value ratio: invalid size [%d]\n", size[cnt-1]);
+				exit(1);
+			}
+			token = strtok_r(NULL, ".", &saveptr);
+		}
+
+		// ratios
+		char ratio_buf[256];
+		const char *ratio_part = split_pos + 1;
+    	if (strlen(ratio_part) >= sizeof(ratio_buf)) return -1;
+
+		strcpy(ratio_buf, ratio_part);
+		int cnt2 = 0;
+
+		token = strtok_r(ratio_buf, ".", &saveptr);
+		while (token) {
+			ratio[cnt2++] = atof(token);
+			token = strtok_r(NULL, ".", &saveptr);
+		}
+
+		// check
+		if(cnt != cnt2){
+			printf("Error while parsing value ratio: sizes != ratios\n");
+			exit(1);
+		}
+
+
+		// error if total ratio < 100
+		if(t < 100){
+			printf("Error while parsing value ratio: sum(ratios) != 100\n");
+			exit(1);
+		}
+
+		init_values(size, ratio);
+	}	
+	else{
+		init_values([1024,0,0,0,0,0], [100,0,0,0,0,0])
+	}
+	
+	
 	printf("\n[KEY SIZE RATIOS:]\n");
-	printf("\t[4   bytes] : %d\n", target_key_4);
-	printf("\t[8   bytes] : %d\n", target_key_8);
-	printf("\t[16  bytes] : %d\n", target_key_16);
-	printf("\t[32  bytes] : %d\n", target_key_32);
-	printf("\t[64  bytes] : %d\n\n", target_key_64);
-	printf("\t[128 bytes] : %d\n\n", target_key_128);
+	printf("\t[%d  bytes] : [%d %%]\n", key_1, target_key_ratio_1);
+	printf("\t[%d  bytes] : [%d %%]\n", key_2, , target_key_ratio_2);
+	printf("\t[%d  bytes] : [%d %%]\n", key_3, , target_key_ratio_3);
+	printf("\t[%d  bytes] : [%d %%]\n", key_4, , target_key_ratio_4);
+	printf("\t[%d  bytes] : [%d %%]\n", key_5, , target_key_ratio_5);
+	printf("\t[%d  bytes] : [%d %%]\n\n", key_6, , target_key_ratio_6);
 
 	printf("\n[VALUE SIZE RATIOS:]\n");
-	printf("\t[64   bytes] : %d\n", target_64);
-	printf("\t[128  bytes] : %d\n", target_128);
-	printf("\t[256  bytes] : %d\n", target_256);
-	printf("\t[512  bytes] : %d\n", target_512);
-	printf("\t[1024 bytes] : %d\n\n", target_1024);
-
-
-	
+	printf("\t[%d  bytes] : [%d %%]\n", value_1, value_target_1);
+	printf("\t[%d  bytes] : [%d %%]\n", value_2, , value_target_2);
+	printf("\t[%d  bytes] : [%d %%]\n", value_3, , value_target_3);
+	printf("\t[%d  bytes] : [%d %%]\n", value_4, , value_target_4);
+	printf("\t[%d  bytes] : [%d %%]\n\n", value_5, , value_target_5);
 
 	unsigned int i;
 
