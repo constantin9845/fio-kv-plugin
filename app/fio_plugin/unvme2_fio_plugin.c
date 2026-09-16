@@ -1032,7 +1032,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 			 value_1,
 			 VALUE_COUNTER_READ_1/IO_COUNTER_READ, 
 
-			 value_2
+			 value_2,
 			 VALUE_COUNTER_READ_2/IO_COUNTER_READ, 
 
 			 value_3,
