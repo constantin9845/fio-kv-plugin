@@ -795,6 +795,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	/* KEY */
 	fio_req->key_size = get_kv_key_size(key_prob, (io_u->ddir == DDIR_READ)); 
 
+	printf("Got key size = %u\n",fio_req->key_size );
+
 	if(!fio_req->key){
 		fio_req->key = kv_zalloc(8192);
 		if (!fio_req->key) return FIO_Q_BUSY;
@@ -809,6 +811,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 	/* VALUE */
 	uint32_t valueKB = get_kv_value_size(value_prob, (io_u->ddir == DDIR_READ));
+
+	printf("Got value size = %u\n",valueKB);
 
 	// override first value buffer
 	if(IO_COUNTER == 0){
@@ -829,6 +833,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 	kv->value.length = valueKB;
 	kv->value.actual_value_size = 0;
 	kv->value.offset = 0;
+
+	printf("Filled value buffer\n");
 
 	// LBA
 	if(fio_thread->ssd_type == LBA_TYPE_SSD) {
@@ -858,6 +864,8 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		memcpy(fio_req->key, gen, LEN);
 
 		kv->key.key = fio_req->key;
+
+		printf("Filled key\n");
 
 		if (io_u->xfer_buflen == ZERO_VALUE_MAGICNUM) {
 			kv->value.length = 0;
@@ -922,7 +930,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_WRITE++;
 
-		//printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
+		printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
 		break;
