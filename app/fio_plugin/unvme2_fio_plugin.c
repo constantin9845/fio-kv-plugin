@@ -1028,8 +1028,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 	printf("[TOTAL WRITE ]       : %.0f\n", IO_COUNTER_WRITE);
 	printf("\n");
 	if(IO_COUNTER_READ != 0)
-		printf("[READ RATIO STATUS ] : 
-			[ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
+		printf("[READ RATIO STATUS ] : [ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
 			 value1,
 			 VALUE_COUNTER_READ_1/IO_COUNTER_READ, 
 
@@ -1047,8 +1046,7 @@ static void kv_fio_cleanup(struct thread_data *td)
 			);
 	printf("\n");
 	if(IO_COUNTER_WRITE != 0)
-		printf("[WRITE RATIO STATUS] : 
-			[ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
+		printf("[WRITE RATIO STATUS] : [ [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f | [%d]B = %.2f ]\n", 
 			 value1,
 			 VALUE_COUNTER_WRITE_1/IO_COUNTER_WRITE, 
 
