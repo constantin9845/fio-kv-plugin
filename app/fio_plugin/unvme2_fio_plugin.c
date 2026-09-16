@@ -935,7 +935,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
-		print("ret = %d\n", ret);
+		printf("ret = %d\n", ret);
 		break;
 	default: // NOT support DDIR_TRIM, DDIR_SYNC, DDIR_DATASYNC
 		//break;
