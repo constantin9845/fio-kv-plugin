@@ -1,90 +1,133 @@
-OpenMPDK (Open Memory Platform Development Kit)
-================================================
-The Open Memory Platform Development Kit (OpenMPDK) will provide proper SW stack of OS and application to enabling solution devices (NVMe SSDs and future solution devices). 
-It will include user level drivers, kernel drivers, sample applications and tools.
+# fio KV Plugin
 
-The development kit currently includes:
-•	User Level NVMe driver (uNVMe driver). 
+Key-Value (KV) plugin for [fio](https://github.com/axboe/fio). Allows you to generate Key-value workloads for KV-SSDs with variable key/value distributions.
 
-uNVMe driver
-uNVMe driver is an user space NVMe driver implemented as a library to which the sample applications can be linked with. Using the SDK, the sample will initialize the NVMe devices, submit and process the I/Os directly to the NVMe devices with a polling mode. It can reduce overhead which are occurred by kernel context switched and I/O handling on interrupt mode and provide optimized performance with lower latency SSD such as NVMe SSDs.
-This release also includes the sample applications and tools for the uNVMe driver. An application will be combined with the uNVMe driver into one process and takes the ownership of a device upon execution and controls the device. An NVMe device can only be accessed by one application at any given time  and an application can access multiple devices simultaneously. The sample applications can control the device using the provided APIs described below.
+---
+
+## Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/constantin9845/fio-kv-plugin.git
+cd fio-kv-plugin
+```
+
+### 2. Build the Plugin
+```bash
+cd app/fio_plugin
+make
+```
+
+The build will generate `fio-3.3`
+
+---
+
+## Usage
+
+Workflow regardless of CLI or job file
+
+```bash
+cd fio-kv-plugin
+
+# prepare drive
+./run.sh 
+
+cd app/fio_plugin
+```
+
+### Command Line 
+Minimum **required** options:
+```bash
+fio --name=kv_test \
+    --ioengine=./unvme2_fio_plugin \
+    --json_path=./unvme2_config.json \
+    --bs=64
+    --direct=1
+    --filename=0000.00.05.0
+    --variable_key_size=1
+    --variable_value_size=1
+    --key_ratio=32.128_90.10
+    --value_ratio=32.128.2048_15.25.60
+```
+
+### Job File Example
+Create a file named `kv_test.fio`:
+
+```ini
+[global]
+
+ioengine=./unvme2_fio_plugin
+json_path=./unvme2_config.json
 
 
-================================================
-Prerequisites (Please run commands below as root)
+size=5G
+bs=64 # fixed at 64!
+
+thread=1
+direct=1
+filename=0000.00.05.0
+exitall_on_error=1
 
 
-1. DPDK/SPDK
-	// Install OS dependent packages in an autonomous manner
-	#${MPDK_HOME}/script/pkgdep.sh
+variable_key_size=1
 
-	// Or, manual installation
-	//Ubuntu/Debian
-	#apt-get install -y gcc g++ make libcunit1-dev libaio-dev libssl-dev libgflags-dev check
-	#apt-get install xfsprogs
-	#apt-get install linux-tools-common linux-cloud-tools-`uname -r` linux-tools-`uname -r` linux-tools-`uname -r`-generic linux-cloud-tools-`uname -r`-generic
-	-------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Format : {size}.{size}..._{ratio}.{ratio}... (max 6)
+key_ratio=32.64_20.80
 
-	//Centos
-	# rpm -Uvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
-	# yum update
-	# yum install google-perftools google-perftools-devel
-	# yum install CUnit-devel openssl-devel gflags-devel libaio-devel check-devel scons
+variable_value_size=1
 
-2. Other Apps
-	fuse3: https://github.com/libfuse/libfuse/
-	libcheck - unit test framework for C : https://github.com/libcheck/check
-
-3. Optional libraries
-	srandom - fast random generator : https://github.com/josenk/srandom
-	valgrind - a suite of tools for debugging and profiling : http://repo.or.cz/valgrind.git
-		# sudo apt-get install valgrind
-		# sudo valgrind --tool=memcheck ./sdk_perf_async
-
-================================================
-Installation (Please run commands below as root)
-
- 
-build dpdk/spdk
-#make.sh intel
+# Format : {size}.{size}..._{ratio}.{ratio}... (max 5)
+value_ratio=128.1024_50.50
 
 
-build libuio.a
-#make.sh all (Note: This is identical with ./make.sh driver && ./make.sh io && ./make.sh sdk)
+[load]
+stonewall
+rw=write
+iodepth=128
+numjobs=1
 
-build app
-#make.sh app
+[warmup]
+stonewall
+rw=randwrite
+iodepth=128
+randseed=100
+random_distribution=pareto:0.9
+
+[run]
+stonewall
+rw=randrw
+rwmixread=90
+iodepth=32
+numjobs=1
+randseed=100
+random_distribution=pareto:0.9
+
+```
+
+Run the job file:
+```bash
+sudo ./fio-3.3 kv_test.fio
+```
+
+---
+
+## Important: Changed/New options
+
+| Option | Description | Default / Example |
+| :--- | :--- | :--- |
+| `ioengine` | Compiled plugin | `./unvme2_fio_plugin` |
+| `json_path` | Drive description | `./unvme2_config.json` |
+| `filename` | Target drive set up in `run.sh` | `0000.00.05.0` |
+| `bs` | Block size is fixed at 64, so when providing a `size` fio will assume a block size of 64 was used (thereby issuing much more IO if actual average block size is larger).  | `64` |
+| `size` | Need to manually convert size to match actual block size: 1. Calculate average block size based on key/value size distribution. 2. in bytes: (Target size / average bs) * 64 | `/` |
+| `variable_key_size` | Use variable key size | `1` |
+| `variable_value_size` | Use variable value size | `1` |
+| `key_ratio` | Specify distribution of key sizes, example sets 20% of keys to 32 bytes and 80% of keys to 64 bytes **(max 6 values)** | `32.64_20.80` |
+| `value_ratio` | Specify distribution of value sizes, example sets 50% of keys to 128 bytes and 50% of keys to 1024 bytes **(max 5 values)** | `value_ratio=128.1024_50.50` |
 
 
-================================================
-Source tree
+---
 
-uNVMe/
-├── app
-│   ├── blobfs_perf
-│   ├── external
-│   │   └── fio
-│   ├── fio_plugin
-│   ├── fuse
-│   ├── mkfs
-│   └── unvme_rocksdb
-├── bin
-├── doc
-├── driver
-│   ├── core
-│   ├── external
-│   │   ├── common
-│   │   ├── dpdk-18.05
-│   │   └── spdk-18.04.1
-│   ├── include
-│   └── test
-├── include
-├── io
-│   ├── src
-│   │   ├── common
-│   │   └── slab
-│   └── tests
-├── mk
-└── script
+## License
 
+Distributed under the MIT License. See `LICENSE` for more information.
