@@ -399,18 +399,18 @@ if (engine_option->variable_key_size_status) {
             exit(1);
         }
         ratio[cnt2] = atoi(token);
-        t += ratio[cnt2]; // FIX: Accumulate ratio sum into t
+        t += ratio[cnt2]; 
         cnt2++;
         token = strtok_r(NULL, ".", &saveptr);
     }
 
-    // Check count matching
+    // Check count
     if (cnt != cnt2) {
         printf("Error while parsing key ratio: sizes != ratios\n");
         exit(1);
     }
 
-    // FIX: Correct check for exact ratio sum of 100%
+    // check for ratio sum of 100
     if (t != 100) {
         printf("Error while parsing key ratio: sum(ratios) != 100 (got %d)\n", t);
         exit(1);
@@ -418,7 +418,6 @@ if (engine_option->variable_key_size_status) {
 
     init_keys(size, ratio);
 } else {
-    // FIX: Pass standard C arrays
     init_keys(default_key_sizes, default_ratios);
 }
 
@@ -436,7 +435,6 @@ if (engine_option->variable_value_size_status) {
     char size_buf[256];
     if (size_part_len >= sizeof(size_buf)) return -1;
 
-    // FIX: Copy from engine_option->value_ratio instead of 'input'
     strncpy(size_buf, engine_option->value_ratio, size_part_len);
     size_buf[size_part_len] = '\0';
 
@@ -471,7 +469,7 @@ if (engine_option->variable_value_size_status) {
             exit(1);
         }
         ratio[cnt2] = atoi(token);
-        t += ratio[cnt2]; // FIX: Accumulate ratio sum into t
+        t += ratio[cnt2];
         cnt2++;
         token = strtok_r(NULL, ".", &saveptr);
     }
@@ -823,7 +821,10 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		fio_req->value_buf_size = 8192;
 		
 		fio_req->value_buf = kv_zalloc(fio_req->value_buf_size);
-		if (!fio_req->value_buf) return FIO_Q_BUSY;
+		if (!fio_req->value_buf){
+			printf("queue busy\n");
+			return FIO_Q_BUSY;
+		} 
 	}
 
 	// fill value buffer
@@ -909,7 +910,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		IO_COUNTER_READ++;
 
-		//printf("[KV RETRIEVE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
+		printf("[KV RETRIEVE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_read(handle, fio_thread->qid, kv);
 		break;
@@ -920,6 +921,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 
 		if(g_sdk_opt.use_cache){
 			ret = fio_kv_cache_write(kv);
+			printf("used cache\n");
 			if (ret == 0) {
 				//if(kv->param.async_cb){
 				//	kv->param.async_cb(kv, kv->value.length, ret);
@@ -933,6 +935,7 @@ static int kv_fio_queue(struct thread_data *td, struct io_u *io_u)
 		printf("[KV STORE] | key size: %uB | value size = %uB\n", kv->key.length, kv->value.length);
 
 		ret = kv_fio_write(handle, fio_thread->qid, kv);
+		print("ret = %d\n", ret);
 		break;
 	default: // NOT support DDIR_TRIM, DDIR_SYNC, DDIR_DATASYNC
 		//break;
