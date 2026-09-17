@@ -3,33 +3,29 @@
 ioengine=./unvme2_fio_plugin
 json_path=./unvme2_config.json
 
+
 size=${SIZE}
 bs=64
 
-thread=1
 direct=1
-
+thread=1
+group_reporting=1
 filename=0000.00.05.0
 exitall_on_error=1
 
-# Usage
-# key_ratio=8.16.32.64.128.256_10.20.20.20.20.10 --> key ratio={size.size..}_{ratio.ratio..} (max 6)
 
 variable_key_size=1
-key_ratio=8.16.32.64.128.256_10.20.20.20.20.10
-
-# Usage
-# value_ratio=8.16.32.64.128_10.20.20.20.20 --> value ratio={size.size..}_{ratio.ratio..} (max 5)
+key_ratio=32.64_20.80
 
 variable_value_size=1
-value_ratio=8.16.32.64.128_20.20.20.20.20
+value_ratio=100.200.2048_20.75.5
 
+# LOAD
 [load]
 stonewall
 rw=write
 iodepth=128
 numjobs=1
-
 
 [warmup]
 stonewall
