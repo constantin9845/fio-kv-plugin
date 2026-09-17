@@ -7,9 +7,6 @@ json_path=./unvme2_config.json
 size=${SIZE}
 bs=64
 
-thread=1
-clat_percentiles=1
-percentile_list=1.0:5.0:10.0:20.0:30.0:40.0:50.0:60.0:70.0:90.0:95.0:99.0:99.5:99.9:99.99:99.999:99.9999
 direct=1
 group_reporting=1
 filename=0000.00.05.0
@@ -20,7 +17,7 @@ variable_key_size=1
 key_ratio=32.64_20.80
 
 variable_value_size=1
-value_ratio=128.1024_50.50
+value_ratio=100.200.2048_20.75.5
 
 # LOAD
 [load]
@@ -39,8 +36,7 @@ random_distribution=${DISTRIBUTION}
 [run]
 stonewall
 rw=randrw
-rwmixread=90
+rwmixread=95
 iodepth=32
-numjobs=1
 randseed=100
 random_distribution=${DISTRIBUTION}
