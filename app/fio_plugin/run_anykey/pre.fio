@@ -15,10 +15,10 @@ exitall_on_error=1
 
 
 variable_key_size=1
-key_ratio=32.64_20.80
+key_ratio=${KEY_RATIO}
 
 variable_value_size=1
-value_ratio=100.200.2048_20.75.5
+value_ratio=${VALUE_RATIO}
 
 # LOAD
 [load]
