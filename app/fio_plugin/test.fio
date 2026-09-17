@@ -8,6 +8,7 @@ size=${SIZE}
 bs=64
 
 direct=1
+thread=1
 group_reporting=1
 filename=0000.00.05.0
 exitall_on_error=1
