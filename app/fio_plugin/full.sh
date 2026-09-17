@@ -1,13 +1,18 @@
 #!/bin/bash
 
 # Assign arguments to variables for clarity
-VAR_DIST=$1
+VAR_SIZE=$1
+VAR_DIST=$2
 
-echo "Executing FIO: DIST=$VAR_DIST"
-sleep 5
+echo "Executing FIO: SIZE=$VAR_SIZE, DIST=$VAR_DIST"
+sleep 10
 
-sudo DISTRIBUTION=$VAR_DIST ./fio-3.3 run_anykey/pre.fio
+sudo SIZE=$VAR_SIZE \
+     DISTRIBUTION=$VAR_DIST \
+     ./fio-3.3 run_anykey/pre.fio
 
 sleep 120
 
-sudo DISTRIBUTION=$VAR_DIST ./fio-3.3 run_anykey/workload.fio
+sudo SIZE=$VAR_SIZE \
+     DISTRIBUTION=$VAR_DIST \
+     ./fio-3.3 run_anykey/workload.fio
